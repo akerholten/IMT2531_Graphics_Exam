@@ -5,12 +5,12 @@
 terrainModel::terrainModel() {
 	// do nothing
 	terrainMaxHeight = LEVEL_MAX_HEIGHT;
-	blockScale = float(LEVEL_MAX_HEIGHT / 250.0f);
+	blockScale = float(LEVEL_MAX_HEIGHT / LEVELSCALE);
 }
 
 terrainModel::terrainModel(char* path) {
 	terrainMaxHeight = LEVEL_MAX_HEIGHT;
-	blockScale = float(LEVEL_MAX_HEIGHT / 250.0f);
+	blockScale = float(LEVEL_MAX_HEIGHT / LEVELSCALE);
 	loadModel(path);
 }
 
@@ -95,6 +95,10 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 
 	std::vector<Texture> texture;
 	Material terrainMaterial;
+	terrainMaterial.ambient = glm::vec3(0.5f);
+	terrainMaterial.diffuse = glm::vec3(0.5f);
+	terrainMaterial.specular = glm::vec3(0.5f);
+	terrainMaterial.shininess = 16;
 
 	Mesh terrainMesh(vertices, indices, texture, terrainMaterial);
 	meshes.push_back(terrainMesh);
@@ -111,13 +115,21 @@ void terrainModel::generateIndexBuffer() {
 	int numTriangles = (imageWidth - 1) * (imageHeight - 1) * 2;
 
 	// 3 indices for each triangle
-	indices.resize(numTriangles * 3);
+	//indices.resize(numTriangles * 3);
 
 	int index = 0;
 	for (int y = 0; y < imageHeight - 1; y++) {
 		for (int x = 0; x < imageWidth - 1; x++) {
 			int vertexIndex = x + (y * imageWidth);
 			// Top triangle
+			indices.push_back(vertexIndex);
+			indices.push_back(vertexIndex + imageWidth);
+			indices.push_back(vertexIndex + 1);
+
+			indices.push_back(vertexIndex + 1);
+			indices.push_back(vertexIndex + imageWidth + 1);
+			indices.push_back(vertexIndex + imageWidth);
+			/*
 			indices[index++] = vertexIndex;
 			indices[index++] = vertexIndex + imageWidth;
 			indices[index++] = vertexIndex + 1;
@@ -125,9 +137,27 @@ void terrainModel::generateIndexBuffer() {
 			indices[index++] = vertexIndex + 1;
 			indices[index++] = vertexIndex + imageWidth + 1;
 			indices[index++] = vertexIndex + imageWidth;
+		*/
 		}
 	}
+}
 
+void terrainModel::generateNormals() {
+	for (int i = 0; i < indices.size(); i += 3) {
+		glm::vec3 v0 = vertices[indices[i+0]].Position;
+		glm::vec3 v1 = vertices[indices[i+1]].Position;
+		glm::vec3 v2 = vertices[indices[i+2]].Position;
+
+		glm::vec3 normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
+
+		vertices[indices[i+0]].Normal += normal;
+		vertices[indices[i+1]].Normal += normal;
+		vertices[indices[i+2]].Normal += normal;
+	}
+
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].Normal = glm::normalize(vertices[i].Normal);
+	}
 }
 
 float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x, int y) {

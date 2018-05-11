@@ -21,6 +21,7 @@ private:
 	virtual void loadModel(std::string path);
 	void generateTerrain(unsigned char* data, int nrComponents);
 	void generateIndexBuffer();
+	void generateNormals();
 	float getPixelHeight(unsigned char* data, int nrComponents, int x, int y);
 	virtual unsigned int TextureFromFile(const char *path, bool gamma = false);
 };

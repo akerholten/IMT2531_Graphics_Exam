@@ -21,3 +21,4 @@ struct Texture {
 const int LEVEL_MAX_HEIGHT = 100;
 const int MAX_WIDTH = 100;
 const int MAX_HEIGHT = 100;
+const int LEVELSCALE = 30;

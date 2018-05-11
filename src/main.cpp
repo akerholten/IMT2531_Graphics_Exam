@@ -119,6 +119,7 @@ int main() {
 	//Model model("assets/models/old\ man/muro.obj");
 	objectModel model("assets/models/model/ask21mi.obj");
 	terrainModel terrain("assets/heightmap/height100.png");
+	terrain.scale(0.2f);
 	//Model model2("assets/models/nano/nanosuit.obj");
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
@@ -173,6 +174,8 @@ int main() {
 		model.Draw(shader);
 
 		terrainShader.use();
+		testLight(terrainShader);
+		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
 		terrain.Draw(terrainShader);
