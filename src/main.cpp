@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 
 #include "camera.hpp"
-#include "model.hpp"
+#include "objectModel.hpp"
 
 void testLight(Shader& shader) {
 
@@ -72,7 +72,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "framework", glfwGetPrimaryMonitor(), nullptr); // glfwGetPrimaryMonitor()
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "framework", nullptr, nullptr); // glfwGetPrimaryMonitor()
 	if (!window)
 	{
 		// Window or OpenGL context creation failed
@@ -115,9 +115,10 @@ int main() {
 
 	glfwSwapInterval(1);
 
-	Model model("assets/models/old\ man/muro.obj");
-	Model model2("assets/models/nano/nanosuit.obj");
-	Model city("assets/models/box.obj");
+	//Model model("assets/models/old\ man/muro.obj");
+	objectModel model("assets/models/model/ask21mi.obj");
+	//Model model2("assets/models/nano/nanosuit.obj");
+	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	
 	float lastFrame = 0;
@@ -129,8 +130,6 @@ int main() {
 																	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 	
-	city.scale(0.1f);
-	city.translate(glm::vec3(-150, -1050, 500));
 
 	float lightX = 0;
 	
@@ -169,12 +168,7 @@ int main() {
 
 		//model.translate(glm::vec3(-20 * deltaTime, 0, 0));
 		//model.rotate(40 * deltaTime, glm::vec3(0, 1, 0));
-		shader.setMat4("model", model.getTransform());
 		model.Draw(shader);
-		shader.setMat4("model", model2.getTransform());
-		model2.Draw(shader);
-		shader.setMat4("model", city.getTransform());
-		city.Draw(shader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
