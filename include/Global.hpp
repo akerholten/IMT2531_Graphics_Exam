@@ -18,6 +18,9 @@ struct Texture {
 	std::string path; 
 };
 
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
+
 const int LEVEL_MAX_HEIGHT = 100;
 const int MAX_WIDTH = 100;
 const int MAX_HEIGHT = 100;

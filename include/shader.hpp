@@ -15,6 +15,11 @@ public:
 	// the program ID
 	unsigned int ID;
 
+	// Settings for "hacking in materials"
+	void setOnlyMaterials(bool set);
+	bool isOnlyMaterials();
+	void feedMaterialsToShader();
+
 	// constructor reads and builds the shader
 	Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	// use/activate the shader
@@ -42,4 +47,5 @@ public:
 	void setMat4(const std::string &name, const glm::mat4 &mat) const;
 private:
 	void checkCompileErrors(unsigned int shader, std::string type);
+	bool OnlyMaterials;
 };

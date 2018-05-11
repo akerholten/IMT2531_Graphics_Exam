@@ -63,40 +63,46 @@ void Mesh::setupMesh()
 // render the mesh
 void Mesh::Draw(Shader shader)
 {
-	// bind appropriate textures
-	unsigned int diffuseNr = 1;
-	unsigned int specularNr = 1;
-	unsigned int normalNr = 1;
-	unsigned int heightNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-										  
-		std::string number;						// retrieve texture number (the N in diffuse_textureN)
-		std::string name = textures[i].type;
-		if (name == "texture_diffuse")
-			number = std::to_string(diffuseNr++);
-		else if (name == "texture_specular")
-			number = std::to_string(specularNr++); // transfer unsigned int to stream
-		else if (name == "texture_normal")
-			number = std::to_string(normalNr++); // transfer unsigned int to stream
-		else if (name == "texture_height")
-			number = std::to_string(heightNr++); // transfer unsigned int to stream
-
-												 // now set the sampler to the correct texture unit
-		glUniform1i(glGetUniformLocation(shader.ID, (name + "[" + number + "]").c_str()), i);
-
-		// and finally bind the texture
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+	if (shader.isOnlyMaterials()) {
+		shader.feedMaterialsToShader();
 	}
+	else {
+		// bind appropriate textures
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		unsigned int normalNr = 1;
+		unsigned int heightNr = 1;
+		for (unsigned int i = 0; i < textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
 
-	shader.setInt("diffuseCount", diffuseNr - 1);
-	shader.setInt("specularCount", specularNr - 1);
+			std::string number;						// retrieve texture number (the N in diffuse_textureN)
+			std::string name = textures[i].type;
+			if (name == "texture_diffuse")
+				number = std::to_string(diffuseNr++);
+			else if (name == "texture_specular")
+				number = std::to_string(specularNr++); // transfer unsigned int to stream
+			else if (name == "texture_normal")
+				number = std::to_string(normalNr++); // transfer unsigned int to stream
+			else if (name == "texture_height")
+				number = std::to_string(heightNr++); // transfer unsigned int to stream
 
-	shader.setVec3("material.ambient", material.ambient);
-	shader.setVec3("material.diffuse", material.diffuse);
-	shader.setVec3("material.specular", material.specular);
-	shader.setFloat("material.shininess", material.shininess);
+													 // now set the sampler to the correct texture unit
+			glUniform1i(glGetUniformLocation(shader.ID, (name + "[" + number + "]").c_str()), i);
+
+			// and finally bind the texture
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
+
+		shader.setInt("diffuseCount", diffuseNr - 1);
+		shader.setInt("specularCount", specularNr - 1);
+
+		shader.setVec3("material.ambient", material.ambient);
+		shader.setVec3("material.diffuse", material.diffuse);
+		shader.setVec3("material.specular", material.specular);
+		shader.setFloat("material.shininess", material.shininess);
+	}
+	
 
 	// draw mesh
 	glBindVertexArray(VAO);

@@ -10,9 +10,9 @@ void testLight(Shader& shader) {
 
 	shader.setBool("dirSet", true);
 	shader.setVec3("dirLight.direction", glm::vec3(1.0f, -1.0f, -0.3f));
-	shader.setVec3("dirLight.ambient", glm::vec3(0.1f, 0.05f, 0.05f));
-	shader.setVec3("dirLight.diffuse", glm::vec3(0.2f, 0.2f, 0.2f));
-	shader.setVec3("dirLight.specular", glm::vec3(0.2f, 0.2f, 0.2f));
+	shader.setVec3("dirLight.ambient", glm::vec3(0.3f, 0.25f, 0.25f));
+	shader.setVec3("dirLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	shader.setVec3("dirLight.specular", glm::vec3(0.4f, 0.4f, 0.4f));
 
 
 
@@ -42,9 +42,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
-// settings
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 10.0f, 30.0f));
@@ -124,6 +121,7 @@ int main() {
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
+	terrainShader.setOnlyMaterials(true);
 	float lastFrame = 0;
 
 	// draw in wireframe
@@ -133,8 +131,6 @@ int main() {
 																	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 	
-
-	float lightX = 0;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -175,6 +171,19 @@ int main() {
 
 		terrainShader.use();
 		testLight(terrainShader);
+
+		terrainShader.setInt("spotCount", 1);
+		terrainShader.setVec3("spotLight[0].position", camera.Position);
+		terrainShader.setVec3("spotLight[0].direction", camera.Front);
+		terrainShader.setVec3("spotLight[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		terrainShader.setVec3("spotLight[0].diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+		terrainShader.setVec3("spotLight[0].specular", glm::vec3(0.6f, 0.6f, 0.6f));
+		terrainShader.setFloat("spotLight[0].cutOff", glm::cos(glm::radians(16.0f)));
+		terrainShader.setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(20.0f)));
+		terrainShader.setFloat("spotLight[0].constant", 1.0f);
+		terrainShader.setFloat("spotLight[0].linear", 0.007);
+		terrainShader.setFloat("spotLight[0].quadratic", 0.0002);
+
 		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);

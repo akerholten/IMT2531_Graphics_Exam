@@ -3,6 +3,7 @@
 Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 {
 	// 1. retrieve the vertex/fragment source code from filePath
+	OnlyMaterials = false;
 	std::string vertexCode;
 	std::string fragmentCode;
 	std::string geometryCode;
@@ -82,6 +83,41 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 	if (geometryPath != nullptr)
 		glDeleteShader(geometry);
 
+}
+
+void Shader::setOnlyMaterials(bool set) {
+	OnlyMaterials = set;
+}
+
+bool Shader::isOnlyMaterials() {
+	return OnlyMaterials;
+}
+
+void Shader::feedMaterialsToShader() {
+
+	// Water Material
+	setVec3("material[0].ambient", 0.0f, 0.25f, 0.95f);
+	setVec3("material[0].diffuse", 0.0f, 0.5f, 1.0f);
+	setVec3("material[0].specular", 0.04f, 0.7f, 0.7f);
+	setFloat("material[0].shininess", 16);
+
+	// Grass Material
+	setVec3("material[1].ambient", 0.0f, 0.7f, 0.0f);
+	setVec3("material[1].diffuse", 0.0f, 0.9f, 0.0f);
+	setVec3("material[1].specular", 0.04f, 0.9f, 0.04f);
+	setFloat("material[1].shininess", 16);
+
+	// Brown Vegetation Material
+	setVec3	("material[2].ambient", 0.3125f, 0.1575f, 0.074f);
+	setVec3	("material[2].diffuse", 0.714f, 0.4284f, 0.18144f);
+	setVec3	("material[2].specular", 0.393548f, 0.271906f, 0.166721f);
+	setFloat("material[2].shininess", 4);
+
+	// Snow Material
+	setVec3("material[3].ambient", 0.9f, 0.9f, 0.9f);
+	setVec3("material[3].diffuse", 1.0f, 1.0f, 1.0f);
+	setVec3("material[3].specular", 1.0f, 1.0f, 1.0f);
+	setFloat("material[3].shininess", 16);
 }
 
 void Shader::use()

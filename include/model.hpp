@@ -22,7 +22,7 @@ public:
 	/*  Functions   */
 	Model();
 	Model(char *path);
-	void Draw(Shader shader);
+	virtual void Draw(Shader shader);
 	glm::mat4 getTransform();
 	void translate(glm::vec3 offset);
 	void rotate(float degrees, glm::vec3 rotation);
