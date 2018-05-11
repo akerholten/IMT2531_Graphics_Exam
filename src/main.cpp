@@ -122,7 +122,7 @@ int main() {
 	//Model model2("assets/models/nano/nanosuit.obj");
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
-	
+	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
 	float lastFrame = 0;
 
 	// draw in wireframe
@@ -171,6 +171,10 @@ int main() {
 		//model.translate(glm::vec3(-20 * deltaTime, 0, 0));
 		//model.rotate(40 * deltaTime, glm::vec3(0, 1, 0));
 		model.Draw(shader);
+
+		terrainShader.setMat4("projection", projection);
+		terrainShader.setMat4("view", view);
+		terrain.Draw(terrainShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

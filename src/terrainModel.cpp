@@ -76,7 +76,7 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 			
 			Vertex vboData;
 			vboData.Position.x	= x * halfTerrainWidth;
-			vboData.Position.y	= heightMap[x + (imageWidth * y)];
+			vboData.Position.y	= heightMap[x + (imageWidth * y)] * terrainMaxHeight;
 			vboData.Position.z	= y * halfTerrainHeight;
 			vboData.Normal		= glm::vec3(0.0f);
 			vboData.TexCoords	= glm::vec2(0.0f);
@@ -84,12 +84,14 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 			vertices.push_back(vboData);
 			
 			
-			if (heightMap[x + (imageWidth * y)] >= 0.95f || heightMap[x + (imageWidth * y)] <= 0.05f) {
+			/*if (heightMap[x + (imageWidth * y)] >= 0.95f || heightMap[x + (imageWidth * y)] <= 0.05f) {
 				std::cout << heightMap[x + (imageWidth * y)] << " Height "
 					<< x << " x " << y << " y \n";
-			}
+			}*/
 		}
 	}
+
+	generateIndexBuffer();
 
 	std::vector<Texture> texture;
 	Material terrainMaterial;
@@ -100,13 +102,29 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 }
 
 void terrainModel::generateIndexBuffer() {
+	/*
+	Reducing numTriangles with one in width and height
+	as I am calculating the triangles from top to bottom
+	*/
+	
+	// 2 triangles for each quad
 	int numTriangles = (imageWidth - 1) * (imageHeight - 1) * 2;
+
+	// 3 indices for each triangle
 	indices.resize(numTriangles * 3);
 
 	int index = 0;
-	for (int y = 0; y <= imageHeight; y++) {
-		for (int x = 0; x <= imageWidth; x++) {
+	for (int y = 0; y < imageHeight - 1; y++) {
+		for (int x = 0; x < imageWidth - 1; x++) {
 			int vertexIndex = x + (y * imageWidth);
+			// Top triangle
+			indices[index++] = vertexIndex;
+			indices[index++] = vertexIndex + imageWidth;
+			indices[index++] = vertexIndex + 1;
+			// Bottom triangle
+			indices[index++] = vertexIndex + 1;
+			indices[index++] = vertexIndex + imageWidth + 1;
+			indices[index++] = vertexIndex + imageWidth;
 		}
 	}
 
@@ -114,7 +132,7 @@ void terrainModel::generateIndexBuffer() {
 
 float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x, int y) {
 	float height;
-	unsigned char* pixelOffset = data + (x + (imageWidth * y)) * 1; //Get the image
+	unsigned char* pixelOffset = data + (x + (imageWidth * y)); //Get the image
 	unsigned char r = pixelOffset[0]; //Get R value
 	unsigned char g = pixelOffset[1]; //Get G value
 	unsigned char b = pixelOffset[2]; //Get B value
