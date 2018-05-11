@@ -17,13 +17,13 @@ struct Material {
 
 class Mesh {
 public:
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material material);
 	/*  Mesh Data  */
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 	Material material;
 	/*  Functions  */
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material material);
 	void Draw(Shader shader);
 private:
 	/*  Render data  */

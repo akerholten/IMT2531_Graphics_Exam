@@ -9,12 +9,18 @@ public:
 	terrainModel();
 	terrainModel(char* path);
 private:
+	float blockScale;
 	int terrainMaxHeight;
-	
-	std::vector<float> heightMap;
-	float getPixelHeight(unsigned char* data, int imageWidth, int x, int y);
+	int imageWidth;
+	int imageHeight;
 
-	void generateTerrain(unsigned char* data, int imageWidth, int imageHeight);
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	std::vector<float>	heightMap;
+
 	virtual void loadModel(std::string path);
+	void generateTerrain(unsigned char* data, int nrComponents);
+	void generateIndexBuffer();
+	float getPixelHeight(unsigned char* data, int nrComponents, int x, int y);
 	virtual unsigned int TextureFromFile(const char *path, bool gamma = false);
 };
