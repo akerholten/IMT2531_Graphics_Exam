@@ -5,12 +5,12 @@
 terrainModel::terrainModel() {
 	// do nothing
 	terrainMaxHeight = LEVEL_MAX_HEIGHT;
-	blockScale = LEVEL_MAX_HEIGHT / 250;
+	blockScale = float(LEVEL_MAX_HEIGHT / 250.0f);
 }
 
 terrainModel::terrainModel(char* path) {
 	terrainMaxHeight = LEVEL_MAX_HEIGHT;
-	blockScale = LEVEL_MAX_HEIGHT / 250;
+	blockScale = float(LEVEL_MAX_HEIGHT / 250.0f);
 	loadModel(path);
 }
 
@@ -75,9 +75,9 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 			float halfTerrainHeight = terrainHeight * 0.5f;
 			
 			Vertex vboData;
-			vboData.Position.x	= x * halfTerrainWidth;
+			vboData.Position.x	= x * blockScale;
 			vboData.Position.y	= heightMap[x + (imageWidth * y)] * terrainMaxHeight;
-			vboData.Position.z	= y * halfTerrainHeight;
+			vboData.Position.z	= y * blockScale;
 			vboData.Normal		= glm::vec3(0.0f);
 			vboData.TexCoords	= glm::vec2(0.0f);
 

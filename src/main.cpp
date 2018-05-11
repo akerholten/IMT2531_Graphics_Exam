@@ -172,6 +172,7 @@ int main() {
 		//model.rotate(40 * deltaTime, glm::vec3(0, 1, 0));
 		model.Draw(shader);
 
+		terrainShader.use();
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
 		terrain.Draw(terrainShader);
