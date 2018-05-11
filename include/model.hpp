@@ -30,7 +30,7 @@ public:
 	void scale(float scale);
 protected:
 	std::vector<Texture> textures_loaded;
-	unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
+	virtual unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 	/*  Model Data  */
 	glm::mat4 transform;
 	std::vector<Mesh> meshes;

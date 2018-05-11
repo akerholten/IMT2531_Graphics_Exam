@@ -4,6 +4,7 @@
 
 #include "camera.hpp"
 #include "objectModel.hpp"
+#include "terrainModel.hpp"
 
 void testLight(Shader& shader) {
 
@@ -117,6 +118,7 @@ int main() {
 
 	//Model model("assets/models/old\ man/muro.obj");
 	objectModel model("assets/models/model/ask21mi.obj");
+	terrainModel terrain("assets/heightmap/height100.png");
 	//Model model2("assets/models/nano/nanosuit.obj");
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
