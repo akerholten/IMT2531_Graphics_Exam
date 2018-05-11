@@ -1,0 +1,11 @@
+﻿  Building Custom Rule D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/CMakeLists.txt
+  CMake does not need to re-run because D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/CMakeFiles/generate.stamp is up-to-date.
+  gui.cpp
+  main.cpp
+  mesh.cpp
+  render.cpp
+  shaderload.cpp
+  update.cpp
+  Generating Code...
+  pacman_the_retaliation.vcxproj -> D:\Users\Avokado\Documents\Programmering\GFX prog\gfx project\gfx project\build\bin\Debug\pacman_the_retaliation.exe
+  pacman_the_retaliation.vcxproj -> D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/bin/Debug/pacman_the_retaliation.pdb (Full PDB)

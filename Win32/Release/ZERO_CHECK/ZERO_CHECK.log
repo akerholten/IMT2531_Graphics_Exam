@@ -1,0 +1,16 @@
+﻿  Checking Build System
+  CMake is re-running because D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/CMakeFiles/generate.stamp is out-of-date.
+    the file 'D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/CMakeLists.txt'
+    is newer than 'D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/CMakeFiles/generate.stamp.depend'
+    result='-1'
+  -- Selecting Windows SDK version 10.0.15063.0 to target Windows 10.0.16299.
+  -- Could NOT find Vulkan (missing: VULKAN_LIBRARY VULKAN_INCLUDE_DIR) 
+  -- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+  -- Using Win32 for window creation
+  -- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+  -- Creating directory D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/freetype-2.9/include/freetype/config
+  -- Creating file D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/freetype-2.9/include/freetype/config/ftconfig.h
+  -- Creating file D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build/freetype-2.9/include/freetype/config/ftoption.h
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: D:/Users/Avokado/Documents/Programmering/GFX prog/gfx project/gfx project/build
