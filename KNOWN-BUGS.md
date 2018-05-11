@@ -22,3 +22,8 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 
 
 ## LEVEL 1:
+
+###### Last pixel when loading heightmap has incorrect value
+- Description: When loading the heightmap, the last pixel loaded is of a slightly to high value (should be >= 1, but is ~1.17)
+- Possible solution: Change for-loop for indexing?
+- Cause: Guess: Might be indexing pixels incorrect

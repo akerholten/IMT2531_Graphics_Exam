@@ -64,8 +64,8 @@ unsigned int terrainModel::TextureFromFile(const char *path, bool gamma) {
 void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 	std::cout	<< imageWidth	<< " ImageWidth\n"
 				<< imageHeight	<< " ImageHeight\n";
-	for (int y = 0; y <= imageHeight; y++) {
-		for (int x = 0; x <= imageWidth; x++) {
+	for (int y = 0; y < imageHeight; y++) {
+		for (int x = 0; x < imageWidth; x++) {
 			heightMap.push_back(getPixelHeight(data, nrComponents, x, y));
 			// Size of the terrain in world units
 			float terrainWidth = (imageWidth - 1) * blockScale;		// X-axis
@@ -84,7 +84,7 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 			vertices.push_back(vboData);
 			
 			
-			if (heightMap[x + (imageWidth * y)] >= 0.90f || heightMap[x + (imageWidth * y)] <= 0.10f) {
+			if (heightMap[x + (imageWidth * y)] >= 0.95f || heightMap[x + (imageWidth * y)] <= 0.05f) {
 				std::cout << heightMap[x + (imageWidth * y)] << " Height "
 					<< x << " x " << y << " y \n";
 			}
@@ -96,6 +96,19 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 
 	Mesh terrainMesh(vertices, indices, texture, terrainMaterial);
 	meshes.push_back(terrainMesh);
+
+}
+
+void terrainModel::generateIndexBuffer() {
+	int numTriangles = (imageWidth - 1) * (imageHeight - 1) * 2;
+	indices.resize(numTriangles * 3);
+
+	int index = 0;
+	for (int y = 0; y <= imageHeight; y++) {
+		for (int x = 0; x <= imageWidth; x++) {
+			int vertexIndex = x + (y * imageWidth);
+		}
+	}
 
 }
 
@@ -111,5 +124,5 @@ float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x,
 	if		(nrComponents == 1)	height = (float)r + (float)g;
 	else if (nrComponents == 2)	height = (float)r + (float)g;	//Put values together to calculate the height
 	else if (nrComponents > 2)	height = (float)r + (float)g + (float)b;
-	return (height / 255) * terrainMaxHeight; //Return the height with smooth in 40
+	return (height / 255); //* terrainMaxHeight; //Return the height with smooth in 40
 }
