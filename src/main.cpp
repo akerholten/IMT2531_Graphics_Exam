@@ -208,6 +208,7 @@ int main() {
 		terrainShader.setMat4("view", view);
 		terrainShader.setInt("currentSeasonId", currentSeason);
 		terrainShader.setFloat("seasonLerpPos", currentSeasonLerp);
+		terrainShader.setBool("contourLines", true);
 		terrain.Draw(terrainShader);
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
