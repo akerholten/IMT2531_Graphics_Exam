@@ -1,4 +1,3 @@
-
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
@@ -14,7 +13,7 @@ void error_callback(int error, const char* description);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 KeyInput getKeyInput(GLFWwindow *window);
 void updateWithInput(KeyInput keys, GLFWwindow *window);
 
@@ -66,7 +65,7 @@ int main() {
 	glfwMakeContextCurrent(window);
 	// bind glfw events to custom functions
 	glfwSetErrorCallback(error_callback);
-	//glfwSetKeyCallback(window, key_callback);
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
@@ -209,15 +208,6 @@ void error_callback(int error, const char* description)
 	std::cout << "Error " << error << ": " << description;
 }
 
-/*
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{	
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-*/
-
-
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -255,70 +245,64 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+		drawContour = !drawContour;
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+		lerpSeasons = !lerpSeasons;
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 3;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 3;
+	}
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+		lerpTime = !lerpTime;
+	}
+}
 
 KeyInput getKeyInput(GLFWwindow *window) {
 	KeyInput returnInput;
-	returnInput.escKey		= glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
 	returnInput.wKey		= glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
 	returnInput.sKey		= glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
 	returnInput.aKey		= glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
 	returnInput.dKey		= glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
-	returnInput.oKey		= glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS;
-	returnInput.nineKey		= glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS;
-	returnInput.eightKey	= glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS;
-	returnInput.sevenKey	= glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS;
-	returnInput.sixKey		= glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS;
-	returnInput.fiveKey		= glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS;
-	returnInput.fourKey		= glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS;
-	returnInput.threeKey	= glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS;
-	returnInput.twoKey		= glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS;
-	returnInput.oneKey		= glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS;
-	returnInput.zeroKey		= glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS;
 	return returnInput;
 };
 
 
 void updateWithInput(KeyInput keys, GLFWwindow *window) {
-	if (keys.escKey)	glfwSetWindowShouldClose(window, GLFW_TRUE);
 	if (keys.wKey)		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (keys.sKey)		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	if (keys.aKey)		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys.dKey)		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (keys.oKey)		drawContour = !drawContour;
-	if (keys.fiveKey)	lerpSeasons = !lerpSeasons;
-	if (keys.fourKey) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 3;
-	}
-	if (keys.threeKey) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 2;
-	}
-	if (keys.twoKey) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 1;
-	}
-	if (keys.oneKey) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 0;
-	}
-	if (keys.sixKey) {
-		currentTimeLerp = 0.0f;
-		currentTime = 0;
-	}
-	if (keys.sevenKey) {
-		currentTimeLerp = 0.0f;
-		currentTime = 1;
-	}
-	if (keys.eightKey) {
-		currentTimeLerp = 0.0f;
-		currentTime = 2;
-	}
-	if (keys.nineKey) {
-		currentTimeLerp = 0.0f;
-		currentTime = 3;
-	}
-	if (keys.zeroKey) {
-		lerpTime = !lerpTime;
-	}
 };
