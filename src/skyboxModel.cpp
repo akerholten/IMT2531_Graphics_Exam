@@ -22,7 +22,7 @@ void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
 	glBindVertexArray(skyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-	glDrawArrays(GL_TRIANGLES, 0, skyboxVertices.size()*2);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
 }
@@ -81,55 +81,55 @@ void skyboxModel::init() {
 	glGenBuffers(1, &skyboxVBO);
 	glBindVertexArray(skyboxVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, skyboxVertices.size(), skyboxVertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 3 * 36 * sizeof(GLfloat), skyboxVertices.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLfloat*)0);
 }
 
 std::vector<GLfloat> skyboxModel::initVertices() {
 	std::vector<GLfloat> vertices {
 		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-2.0f,  2.0f, -2.0f,
+		-2.0f, -2.0f, -2.0f,
+		2.0f, -2.0f, -2.0f,
+		2.0f, -2.0f, -2.0f,
+		2.0f,  2.0f, -2.0f,
+		-2.0f,  2.0f, -2.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-2.0f, -2.0f,  2.0f,
+		-2.0f, -2.0f, -2.0f,
+		-2.0f,  2.0f, -2.0f,
+		-2.0f,  2.0f, -2.0f,
+		-2.0f,  2.0f,  2.0f,
+		-2.0f, -2.0f,  2.0f,
 
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
+		2.0f, -2.0f, -2.0f,
+		2.0f, -2.0f,  2.0f,
+		2.0f,  2.0f,  2.0f,
+		2.0f,  2.0f,  2.0f,
+		2.0f,  2.0f, -2.0f,
+		2.0f, -2.0f, -2.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-2.0f, -2.0f,  2.0f,
+		-2.0f,  2.0f,  2.0f,
+		2.0f,  2.0f,  2.0f,
+		2.0f,  2.0f,  2.0f,
+		2.0f, -2.0f,  2.0f,
+		-2.0f, -2.0f,  2.0f,
 
-		-1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f,  1.0f,
-		1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-2.0f,  2.0f, -2.0f,
+		2.0f,  2.0f, -2.0f,
+		2.0f,  2.0f,  2.0f,
+		2.0f,  2.0f,  2.0f,
+		-2.0f,  2.0f,  2.0f,
+		-2.0f,  2.0f, -2.0f,
 
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		1.0f, -1.0f,  1.0f
+		-2.0f, -2.0f, -2.0f,
+		-2.0f, -2.0f,  2.0f,
+		2.0f, -2.0f, -2.0f,
+		2.0f, -2.0f, -2.0f,
+		-2.0f, -2.0f,  2.0f,
+		2.0f, -2.0f,  2.0f
 	};
 
 	return vertices;
