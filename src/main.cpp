@@ -118,7 +118,8 @@ int main() {
 																	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 
-	
+	model.translate(glm::vec3(0.25f*504, 30.0f, 0.25f*1004));
+	model.scale(2.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
@@ -126,7 +127,6 @@ int main() {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
 		if (lerpSeasons) {
 			currentSeasonLerp += (deltaTime / seasonTimeScaleInSeconds);
 
@@ -165,8 +165,8 @@ int main() {
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 
-		//model.translate(glm::vec3(-20 * deltaTime, 0, 0));
-		//model.rotate(40 * deltaTime, glm::vec3(0, 1, 0));
+		model.rotate(5 * deltaTime, glm::vec3(0, 1, 0));
+		model.translate(glm::vec3(-5 * deltaTime, 0, 0));
 		model.Draw(shader);
 
 		terrainShader.use();
