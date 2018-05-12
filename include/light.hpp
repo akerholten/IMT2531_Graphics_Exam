@@ -1,10 +1,13 @@
 #pragma once
 #include "glm.hpp"
 #include "shader.hpp"
+#include "camera.hpp"
 #include <array>
+#include <string>
 
 struct directionalLight {
 	glm::vec3 direction;
+
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
@@ -95,6 +98,7 @@ class Light {
 public:
 	Light();
 	void init();
+	void initSpotLight();
 
 	directionalLight worldLight;
 
@@ -102,7 +106,9 @@ public:
 	void newPointLight(pointLight light);
 	void newSpotLight(spotLight light);
 
-	void sendLightToShader(Shader shader);
+	void sendLightToShader(Shader shader, Camera camera);
+	void spotLightToShader(int index, Shader shader, Camera camera);
+	void pointLightToShader(int index, Shader shader, Camera camera);
 
 	void setLightProperty(LightType type, glm::vec3 newProperty, LightVariable variable);
 private:

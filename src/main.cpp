@@ -6,35 +6,8 @@
 #include "objectModel.hpp"
 #include "terrainModel.hpp"
 #include "skyboxModel.hpp"
+#include "light.hpp"
 
-void testLight(Shader& shader) {
-
-	shader.setBool("dirSet", true);
-	shader.setVec3("dirLight.direction", glm::vec3(1.0f, -1.0f, -0.3f));
-	shader.setVec3("dirLight.ambient", glm::vec3(0.3f, 0.25f, 0.25f));
-	shader.setVec3("dirLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-	shader.setVec3("dirLight.specular", glm::vec3(0.4f, 0.4f, 0.4f));
-
-
-
-
-	// LIGHT CLASS STUFF
-	/*shader.setBool("light.isDirection", lightToggle);
-	shader.setVec3("light.position", camera.Position);
-	shader.setVec3("light.direction", camera.Front);
-	shader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-	shader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-	shader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
-	shader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	shader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
-
-	// light 600 distance
-
-	shader.setFloat("light.constant", 1.0f);
-	shader.setFloat("light.linear", 0.007);
-	shader.setFloat("light.quadratic", 0.0002);
-	shader.setVec3("viewPos", camera.Position);*/
-}
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void error_callback(int error, const char* description);
@@ -130,6 +103,9 @@ int main() {
 	terrainShader.setOnlyMaterials(true);
 	float lastFrame = 0;
 
+	Light light;
+	light.init();
+	light.initSpotLight();
 	// draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -147,7 +123,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		if (lerpSeasons) {
-			currentSeasonLerp += (deltaTime / 30);
+			currentSeasonLerp += (deltaTime / seasonTimeScaleInSeconds);
 
 			if (currentSeasonLerp >= 1.0f) {
 				currentSeasonLerp = 0.0f;
@@ -171,20 +147,7 @@ int main() {
 
 		glm::mat4 view = camera.GetViewMatrix();
 		shader.use();
-	
-		testLight(shader);
-
-		shader.setInt("spotCount", 1);
-		shader.setVec3("spotLight[0].position", camera.Position);
-		shader.setVec3("spotLight[0].direction", camera.Front);
-		shader.setVec3("spotLight[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		shader.setVec3("spotLight[0].diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-		shader.setVec3("spotLight[0].specular", glm::vec3(0.6f, 0.6f, 0.6f));
-		shader.setFloat("spotLight[0].cutOff", glm::cos(glm::radians(16.0f)));
-		shader.setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(20.0f)));
-		shader.setFloat("spotLight[0].constant", 1.0f);
-		shader.setFloat("spotLight[0].linear", 0.007);
-		shader.setFloat("spotLight[0].quadratic", 0.0002);
+		light.sendLightToShader(shader, camera);
 
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
@@ -194,20 +157,8 @@ int main() {
 		model.Draw(shader);
 
 		terrainShader.use();
-		testLight(terrainShader);
-
-		terrainShader.setInt("spotCount", 1);
-		terrainShader.setVec3("spotLight[0].position", camera.Position);
-		terrainShader.setVec3("spotLight[0].direction", camera.Front);
-		terrainShader.setVec3("spotLight[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		terrainShader.setVec3("spotLight[0].diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-		terrainShader.setVec3("spotLight[0].specular", glm::vec3(0.6f, 0.6f, 0.6f));
-		terrainShader.setFloat("spotLight[0].cutOff", glm::cos(glm::radians(16.0f)));
-		terrainShader.setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(20.0f)));
-		terrainShader.setFloat("spotLight[0].constant", 1.0f);
-		terrainShader.setFloat("spotLight[0].linear", 0.007);
-		terrainShader.setFloat("spotLight[0].quadratic", 0.0002);
-
+		light.sendLightToShader(terrainShader, camera);
+	
 		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
