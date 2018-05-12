@@ -8,10 +8,28 @@ Light::Light() {
 
 void Light::init() {
 	dirSet = true;
-	worldLight.direction = glm::vec3(1.0f, -1.0f, -0.3f);
-	worldLight.ambient = glm::vec3(0.3f, 0.25f, 0.25f);
-	worldLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
-	worldLight.specular = glm::vec3(0.4f, 0.4f, 0.4f);
+
+	nightLight.direction = glm::vec3(0.0f, 0.20f, 1.0f);
+	nightLight.ambient = glm::vec3(0.3f, 0.25f, 0.25f);
+	nightLight.diffuse = glm::vec3(0.15f, 0.05f, 0.1f);
+	nightLight.specular = glm::vec3(0.1f, 0.1f, 0.1f);
+
+	morningLight.direction = glm::vec3(1.0f, -0.10f, 0.0f);
+	morningLight.ambient = glm::vec3(0.3f, 0.25f, 0.25f);
+	morningLight.diffuse = glm::vec3(0.8f, 0.4f, 0.4f);
+	morningLight.specular = glm::vec3(0.4f, 0.4f, 0.4f);
+
+	noonLight.direction = glm::vec3(0.0f, -1.00f, -1.0f);
+	noonLight.ambient = glm::vec3(0.3f, 0.25f, 0.25f);
+	noonLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	noonLight.specular = glm::vec3(0.6f, 0.6f, 0.6f);
+
+	middayLight.direction = glm::vec3(-1.0f, -0.60f, 1.0f);
+	middayLight.ambient = glm::vec3(0.3f, 0.25f, 0.25f);
+	middayLight.diffuse = glm::vec3(0.6f, 0.6f, 0.6f);
+	middayLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	worldLight = nightLight;
 }
 
 void Light::initSpotLight() {
@@ -27,6 +45,44 @@ void Light::initSpotLight() {
 
 		spotLightCount++;
 	}
+}
+
+void Light::lerpLight(int currentTime, float lerpPos) {
+	
+	if (currentTime == 0) {
+		worldLight = lerpCurrent(nightLight, morningLight, lerpPos);
+	}
+	else if (currentTime == 1) {
+		worldLight = lerpCurrent(morningLight, noonLight, lerpPos);
+	}
+	else if (currentTime == 2) {
+		worldLight = lerpCurrent(noonLight, middayLight, lerpPos);
+	}
+	else if (currentTime == 3) {
+		worldLight = lerpCurrent(middayLight, nightLight, lerpPos);
+	}
+}
+
+directionalLight Light::lerpCurrent(directionalLight start, directionalLight end, float lerpPos) {
+	directionalLight resultLight;
+	
+	resultLight.direction.x = lerp(start.direction.x, end.direction.x, lerpPos);
+	resultLight.direction.y = lerp(start.direction.y, end.direction.y, lerpPos);
+	resultLight.direction.z = lerp(start.direction.z, end.direction.z, lerpPos);
+
+	resultLight.ambient.x = lerp(start.ambient.x, end.ambient.x, lerpPos);
+	resultLight.ambient.y = lerp(start.ambient.y, end.ambient.y, lerpPos);
+	resultLight.ambient.z = lerp(start.ambient.z, end.ambient.z, lerpPos);
+
+	resultLight.diffuse.x = lerp(start.diffuse.x, end.diffuse.x, lerpPos);
+	resultLight.diffuse.y = lerp(start.diffuse.y, end.diffuse.y, lerpPos);
+	resultLight.diffuse.z = lerp(start.diffuse.z, end.diffuse.z, lerpPos);
+
+	resultLight.specular.x = lerp(start.specular.x, end.specular.x, lerpPos);
+	resultLight.specular.y = lerp(start.specular.y, end.specular.y, lerpPos);
+	resultLight.specular.z = lerp(start.specular.z, end.specular.z, lerpPos);
+
+	return resultLight;
 }
 
 void Light::newDirectionalLight(directionalLight light) {
@@ -73,4 +129,8 @@ void Light::spotLightToShader(int index, Shader shader, Camera camera) {
 
 void Light::setLightProperty(LightType type, glm::vec3 newProperty, LightVariable variable) {
 
+}
+
+float Light::lerp(float v0, float v1, float t) {
+	return (1 - t) * v0 + t * v1;
 }

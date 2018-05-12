@@ -2,6 +2,7 @@
 #include "glm.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
+#include "Global.hpp"
 #include <array>
 #include <string>
 
@@ -101,10 +102,17 @@ public:
 	void initSpotLight();
 
 	directionalLight worldLight;
+	directionalLight nightLight;
+	directionalLight morningLight;
+	directionalLight noonLight;
+	directionalLight middayLight;
 
+	void lerpLight(int currentTime, float lerpPos);
+	
 	void newDirectionalLight(directionalLight light);
 	void newPointLight(pointLight light);
 	void newSpotLight(spotLight light);
+
 
 	void sendLightToShader(Shader shader, Camera camera);
 	void spotLightToShader(int index, Shader shader, Camera camera);
@@ -117,4 +125,8 @@ private:
 	int spotLightCount;
 	std::array<pointLight, 10> pointLights;
 	std::array<spotLight, 10> spotLights;
+
+	float lerp(float v0, float v1, float t);
+
+	directionalLight lerpCurrent(directionalLight start, directionalLight end, float lerpPos);
 };

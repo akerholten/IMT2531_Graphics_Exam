@@ -29,9 +29,14 @@ float lastFrame = 0.0f;
 
 bool lightToggle = false;
 bool drawContour = false;
+
 bool lerpSeasons = true;
 float currentSeasonLerp = 0.0f;
 int currentSeason = 0;
+
+bool lerpTime = true;
+int currentTime = 0;
+float currentTimeLerp = 0.0f;
 
 int main() {
 
@@ -127,14 +132,22 @@ int main() {
 
 			if (currentSeasonLerp >= 1.0f) {
 				currentSeasonLerp = 0.0f;
-				if (currentSeason < 3) {
-					currentSeason++;
-				}
-				else if (currentSeason == 3) {
-					currentSeason = 0;
-				}
+				if (currentSeason < 3)		currentSeason++;
+				else if (currentSeason == 3)currentSeason = 0;
 			}
 		}
+
+		if (lerpTime) {
+			currentTimeLerp += (deltaTime / dayLightTimeScaleInSeconds);
+
+			if (currentTimeLerp >= 1.0f) {
+				currentTimeLerp = 0.0f;
+				if (currentTime < 3)		currentTime++;
+				else if (currentTime == 3)	currentTime = 0;
+			}
+		}
+
+		light.lerpLight(currentTime, currentTimeLerp);
 		
 
 		// render
@@ -206,8 +219,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
 		drawContour = !drawContour;
 
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 		lerpSeasons = !lerpSeasons;
+	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
 		currentSeasonLerp = 0.0f;
 		currentSeason = 3;
@@ -223,6 +237,25 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		currentSeasonLerp = 0.0f;
 		currentSeason = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
+		currentTimeLerp = 0.0f;
+		currentTime = 3;
+	}
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+		lerpTime = !lerpTime;
 	}
 		
 		

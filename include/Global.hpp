@@ -3,6 +3,8 @@
 
 #include <string>
 
+
+
 struct Vertex {
 
 	glm::vec3 Position;
@@ -27,3 +29,4 @@ const int MAX_HEIGHT = 100;
 const int LEVELSCALE = 30;
 
 const int seasonTimeScaleInSeconds = 30;
+const int dayLightTimeScaleInSeconds = 10;
