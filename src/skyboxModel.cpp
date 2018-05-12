@@ -12,7 +12,7 @@ skyboxModel::skyboxModel(char *path) {
 }
 
 void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
-	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
 	shader.use();
 	//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
 	shader.setMat4("view", view);
@@ -22,7 +22,7 @@ void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
 	glBindVertexArray(skyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, skyboxVertices.size()*2);
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
 }
@@ -31,12 +31,12 @@ void skyboxModel::loadModel(std::string path) {
 	std::string directory = path.append("/");
 	
 	faces = {
-		"right.tga",
-		"left.tga",
-		"top.tga",
-		"bottom.tga",
-		"front.tga",
-		"back.tga"
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg"
 	};
 
 	cubemapTexture = loadCubeMap(faces, directory);
@@ -56,8 +56,7 @@ unsigned int skyboxModel::loadCubeMap(std::vector<std::string> faces, std::strin
 		if (data)
 		{
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-			);
+				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			stbi_image_free(data);
 		}
 		else
@@ -76,7 +75,7 @@ unsigned int skyboxModel::loadCubeMap(std::vector<std::string> faces, std::strin
 }
 
 void skyboxModel::init() {
-	std::vector<GLfloat> skyboxVertices = initVertices();
+	skyboxVertices = initVertices();
 
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
@@ -84,7 +83,7 @@ void skyboxModel::init() {
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
 	glBufferData(GL_ARRAY_BUFFER, skyboxVertices.size(), skyboxVertices.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 }
 
 std::vector<GLfloat> skyboxModel::initVertices() {

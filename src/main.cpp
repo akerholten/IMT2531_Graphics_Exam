@@ -118,7 +118,7 @@ int main() {
 	objectModel model("assets/models/model/ask21mi.obj");
 	terrainModel terrain("assets/heightmap/height100.png");
 	terrain.scale(0.2f);
-	skyboxModel skybox("assets/skybox/ame_desert");
+	skyboxModel skybox("assets/skybox/skybox");
 	//Model model2("assets/models/nano/nanosuit.obj");
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
@@ -145,9 +145,13 @@ int main() {
 
 		// render
 		// ------
+
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 
+
+		glm::mat4 view = camera.GetViewMatrix();
 		shader.use();
 	
 		testLight(shader);
@@ -164,7 +168,6 @@ int main() {
 		shader.setFloat("spotLight[0].linear", 0.007);
 		shader.setFloat("spotLight[0].quadratic", 0.0002);
 
-		glm::mat4 view = camera.GetViewMatrix();
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 
@@ -192,7 +195,9 @@ int main() {
 		terrainShader.setMat4("view", view);
 		terrain.Draw(terrainShader);
 
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		skybox.Draw(skyboxShader, view, projection);
+
 		
 
 		glfwSwapBuffers(window);

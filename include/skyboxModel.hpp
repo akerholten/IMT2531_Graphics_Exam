@@ -17,6 +17,7 @@ private:
 	unsigned int skyboxVAO;
 	unsigned int skyboxVBO;
 
+	std::vector<GLfloat> skyboxVertices;
 	std::vector<GLfloat> initVertices();
 	virtual void loadModel(std::string path);
 	unsigned int loadCubeMap(std::vector<std::string> faces, std::string directory);
