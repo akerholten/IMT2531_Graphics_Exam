@@ -21,5 +21,10 @@
 ###### Smooth out vegetation on terrainShader
 - Description: Vegetation is showing, but wanting to smooth/"fade" the vegetation when it is close to a new type
 - Possible solution: Some kind of interpolation or something similar to spotlight "smooth"?
+- State: Done
+
+###### Add FreeType for showing UI/Text
+- Description: Wanting to display text elements, such as time of day and current season
+- Possible solution: Include freetype, and display text in a relative "2D" space
 
 ## 1 TODO:
