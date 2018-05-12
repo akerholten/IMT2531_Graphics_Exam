@@ -15,10 +15,10 @@ terrainModel::terrainModel(char* path) {
 }
 
 void terrainModel::loadModel(std::string path) {
-	TextureFromFile(path.c_str());
+	HeightmapFromFile(path.c_str());
 }
 
-unsigned int terrainModel::TextureFromFile(const char *path, bool gamma) {
+unsigned int terrainModel::HeightmapFromFile(const char *path, bool gamma) {
 	
 
 	unsigned int textureID;

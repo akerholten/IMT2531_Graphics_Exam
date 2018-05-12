@@ -19,6 +19,7 @@ public:
 	void setOnlyMaterials(bool set);
 	bool isOnlyMaterials();
 	void feedMaterialsToShader();
+	void feedSeasonsToShader();
 
 	// constructor reads and builds the shader
 	Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);

@@ -65,6 +65,7 @@ void Mesh::Draw(Shader shader)
 {
 	if (shader.isOnlyMaterials()) {
 		shader.feedMaterialsToShader();
+		shader.feedSeasonsToShader();
 	}
 	else {
 		// bind appropriate textures

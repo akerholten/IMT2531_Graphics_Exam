@@ -8,8 +8,15 @@ struct Material {
   vec3 specular;
   float shininess;
 };
-
 uniform Material material[4];
+
+struct Season {
+  float waterLevel;
+  float grassLevel;
+  float brownLevel;
+  float snowLevel;
+};
+uniform Season season[4];
 
 /*      LIGHT EMITTER DEFINITIONS       */
 struct DirLight {
@@ -61,6 +68,8 @@ in vec3 FragPos;
 in vec3 Normal;
 
 uniform vec3 viewPos;
+uniform int currentSeasonId;
+uniform float seasonLerpPos;
 //vec3 diffuseColor;
 //vec3 specularColor;
 
@@ -69,6 +78,7 @@ uniform vec3 viewPos;
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+void lerpMaterial(Material beginning, Material target, float lerpPos);
 vec3 LerpColor(vec3 beginningColor, vec3 targetColor, float lerpPos);
 float lerp(float v0, float v1, float t);
 
@@ -82,22 +92,33 @@ void main()
 {
     // Note/todo material.ambient is ignore atm
     /*    TEXTURE PASS    */
+    Season currentSeason;
 
+    if(currentSeasonId < 3){
+      currentSeason.waterLevel = lerp(season[currentSeasonId].waterLevel, season[currentSeasonId+1].waterLevel, seasonLerpPos);
+      currentSeason.grassLevel = lerp(season[currentSeasonId].grassLevel, season[currentSeasonId+1].grassLevel, seasonLerpPos);
+      currentSeason.brownLevel = lerp(season[currentSeasonId].brownLevel, season[currentSeasonId+1].brownLevel, seasonLerpPos);
+      currentSeason.snowLevel = lerp(season[currentSeasonId].snowLevel, season[currentSeasonId+1].snowLevel, seasonLerpPos);
+    }
+    else if(currentSeasonId == 3){
+      currentSeason.waterLevel = lerp(season[currentSeasonId].waterLevel, season[0].waterLevel, seasonLerpPos);
+      currentSeason.grassLevel = lerp(season[currentSeasonId].grassLevel, season[0].grassLevel, seasonLerpPos);
+      currentSeason.brownLevel = lerp(season[currentSeasonId].brownLevel, season[0].brownLevel, seasonLerpPos);
+      currentSeason.snowLevel = lerp(season[currentSeasonId].snowLevel, season[0].snowLevel, seasonLerpPos);
+    }
 
     float vegetationModifier = pos.y/100.0f;
+    float lerpRange = 0.05f;
 
-    if(vegetationModifier < 0.15f){
+    if(vegetationModifier < currentSeason.waterLevel){
       materialAmbient = material[0].ambient;
       materialDiffuse = material[0].diffuse;
       materialSpecular = material[0].specular;
       materialShininess = material[0].shininess;
     }
-    else if(vegetationModifier < 0.35f){
-      if(vegetationModifier < 0.20f){
-        materialAmbient = LerpColor(material[1].ambient, material[0].ambient, (0.20f - vegetationModifier)/0.05);
-        materialDiffuse = LerpColor(material[1].diffuse, material[0].diffuse, (0.20f - vegetationModifier)/0.05);
-        materialSpecular = LerpColor(material[1].specular, material[0].specular, (0.20f - vegetationModifier)/0.05);
-        materialShininess = lerp(material[1].shininess, material[0].shininess, (0.20f - vegetationModifier)/0.05);
+    else if(vegetationModifier < currentSeason.grassLevel){
+      if(vegetationModifier < currentSeason.waterLevel + lerpRange){
+        lerpMaterial(material[1], material[0], ((currentSeason.waterLevel + lerpRange) - vegetationModifier)/0.05);
       }
       else {
         materialAmbient = material[1].ambient;
@@ -106,12 +127,9 @@ void main()
         materialShininess = material[1].shininess;
       }
     }
-    else if(vegetationModifier < 0.70f){
-      if(vegetationModifier < 0.40f){
-        materialAmbient = LerpColor(material[2].ambient, material[1].ambient, (0.40f - vegetationModifier)/0.05);
-        materialDiffuse = LerpColor(material[2].diffuse, material[1].diffuse, (0.40f - vegetationModifier)/0.05);
-        materialSpecular = LerpColor(material[2].specular, material[1].specular, (0.40f - vegetationModifier)/0.05);
-        materialShininess = lerp(material[2].shininess, material[1].shininess, (0.40f - vegetationModifier)/0.05);
+    else if(vegetationModifier < currentSeason.brownLevel){
+      if(vegetationModifier < currentSeason.grassLevel + lerpRange){
+        lerpMaterial(material[2], material[1], ((currentSeason.grassLevel + lerpRange) - vegetationModifier)/0.05);
       }
       else {
       materialAmbient = material[2].ambient;
@@ -120,12 +138,9 @@ void main()
       materialShininess = material[2].shininess;
       }
     }
-    else if(vegetationModifier < 1.00f){
-      if(vegetationModifier < 0.75f){
-        materialAmbient = LerpColor(material[3].ambient, material[2].ambient, (0.75f - vegetationModifier)/0.05);
-        materialDiffuse = LerpColor(material[3].diffuse, material[2].diffuse, (0.75f - vegetationModifier)/0.05);
-        materialSpecular = LerpColor(material[3].specular, material[2].specular, (0.75f - vegetationModifier)/0.05);
-        materialShininess = lerp(material[3].shininess, material[2].shininess, (0.75f - vegetationModifier)/0.05);
+    else if(vegetationModifier < currentSeason.snowLevel){
+      if(vegetationModifier < currentSeason.brownLevel + lerpRange){
+        lerpMaterial(material[3], material[2], ((currentSeason.brownLevel + lerpRange) - vegetationModifier)/0.05);
       }
       else {
       materialAmbient = material[3].ambient;
@@ -226,6 +241,13 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
+}
+
+void lerpMaterial(Material beginning, Material target, float lerpPos){
+  materialAmbient = LerpColor(beginning.ambient, target.ambient, lerpPos);
+  materialDiffuse = LerpColor(beginning.diffuse, target.diffuse, lerpPos);
+  materialSpecular = LerpColor(beginning.specular, target.specular, lerpPos);
+  materialShininess = lerp(beginning.shininess, target.shininess, lerpPos);
 }
 
 vec3 LerpColor(vec3 beginningColor, vec3 targetColor, float lerpPos){

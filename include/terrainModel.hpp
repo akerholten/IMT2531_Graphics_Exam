@@ -23,5 +23,5 @@ private:
 	void generateIndexBuffer();
 	void generateNormals(int offset);
 	float getPixelHeight(unsigned char* data, int nrComponents, int x, int y);
-	virtual unsigned int TextureFromFile(const char *path, bool gamma = false);
+	unsigned int HeightmapFromFile(const char *path, bool gamma = false);
 };

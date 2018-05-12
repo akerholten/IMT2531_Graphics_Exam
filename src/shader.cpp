@@ -118,6 +118,33 @@ void Shader::feedMaterialsToShader() {
 	setVec3("material[3].diffuse", 1.0f, 1.0f, 1.0f);
 	setVec3("material[3].specular", 1.0f, 1.0f, 1.0f);
 	setFloat("material[3].shininess", 16);
+
+}
+
+void Shader::feedSeasonsToShader() {
+	// Winter season
+	setFloat("season[0].waterLevel", 0.10f);
+	setFloat("season[0].grassLevel", 0.15f);
+	setFloat("season[0].brownLevel", 0.35f);
+	setFloat("season[0].snowLevel", 1.0f);
+
+	// Spring season
+	setFloat("season[1].waterLevel", 0.13f);
+	setFloat("season[1].grassLevel", 0.25f);
+	setFloat("season[1].brownLevel", 0.55f);
+	setFloat("season[1].snowLevel", 1.0f);
+
+	// Summer season
+	setFloat("season[2].waterLevel", 0.15f);
+	setFloat("season[2].grassLevel", 0.35f);
+	setFloat("season[2].brownLevel", 0.70f);
+	setFloat("season[2].snowLevel", 1.0f);
+
+	// Autumn season
+	setFloat("season[3].waterLevel", 0.15f);
+	setFloat("season[3].grassLevel", 0.30f);
+	setFloat("season[3].brownLevel", 0.55f);
+	setFloat("season[3].snowLevel", 1.0f);
 }
 
 void Shader::use()

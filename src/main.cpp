@@ -193,6 +193,8 @@ int main() {
 		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
+		terrainShader.setInt("currentSeasonId", 2);
+		terrainShader.setFloat("seasonLerpPos", 1.0f);
 		terrain.Draw(terrainShader);
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
