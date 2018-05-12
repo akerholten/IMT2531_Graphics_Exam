@@ -133,7 +133,8 @@ int main() {
 
 																	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-	
+	float currentSeasonLerp = 0.0f;
+	int currentSeason = 0;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -142,6 +143,18 @@ int main() {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		currentSeasonLerp += (deltaTime / 30);
+
+		if (currentSeasonLerp >= 1.0f) {
+			currentSeasonLerp = 0.0f;
+			if (currentSeason < 3) {
+				currentSeason++;
+			}
+			else if (currentSeason == 3) {
+				currentSeason = 0;
+			}
+		}
 
 		// render
 		// ------
@@ -193,8 +206,8 @@ int main() {
 		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
-		terrainShader.setInt("currentSeasonId", 2);
-		terrainShader.setFloat("seasonLerpPos", 1.0f);
+		terrainShader.setInt("currentSeasonId", currentSeason);
+		terrainShader.setFloat("seasonLerpPos", currentSeasonLerp);
 		terrain.Draw(terrainShader);
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
