@@ -56,6 +56,9 @@ float lastFrame = 0.0f;
 
 bool lightToggle = false;
 bool drawContour = false;
+bool lerpSeasons = true;
+float currentSeasonLerp = 0.0f;
+int currentSeason = 0;
 
 int main() {
 
@@ -134,8 +137,7 @@ int main() {
 
 																	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-	float currentSeasonLerp = 0.0f;
-	int currentSeason = 0;
+
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -145,17 +147,20 @@ int main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		currentSeasonLerp += (deltaTime / 30);
+		if (lerpSeasons) {
+			currentSeasonLerp += (deltaTime / 30);
 
-		if (currentSeasonLerp >= 1.0f) {
-			currentSeasonLerp = 0.0f;
-			if (currentSeason < 3) {
-				currentSeason++;
-			}
-			else if (currentSeason == 3) {
-				currentSeason = 0;
+			if (currentSeasonLerp >= 1.0f) {
+				currentSeasonLerp = 0.0f;
+				if (currentSeason < 3) {
+					currentSeason++;
+				}
+				else if (currentSeason == 3) {
+					currentSeason = 0;
+				}
 			}
 		}
+		
 
 		// render
 		// ------
@@ -247,8 +252,29 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+
 	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
 		drawContour = !drawContour;
+
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+		lerpSeasons = !lerpSeasons;
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 3;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		currentSeasonLerp = 0.0f;
+		currentSeason = 0;
+	}
+		
 		
 }
 

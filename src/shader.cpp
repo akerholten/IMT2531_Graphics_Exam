@@ -98,8 +98,8 @@ void Shader::feedMaterialsToShader() {
 	// Water Material
 	setVec3("material[0].ambient", 0.0f, 0.25f, 0.95f);
 	setVec3("material[0].diffuse", 0.0f, 0.5f, 1.0f);
-	setVec3("material[0].specular", 0.04f, 0.7f, 0.7f);
-	setFloat("material[0].shininess", 16);
+	setVec3("material[0].specular", 0.4f, 0.7f, 0.7f);
+	setFloat("material[0].shininess", 32);
 
 	// Grass Material
 	setVec3("material[1].ambient", 0.0f, 0.7f, 0.0f);
@@ -117,7 +117,7 @@ void Shader::feedMaterialsToShader() {
 	setVec3("material[3].ambient", 0.9f, 0.9f, 0.9f);
 	setVec3("material[3].diffuse", 1.0f, 1.0f, 1.0f);
 	setVec3("material[3].specular", 1.0f, 1.0f, 1.0f);
-	setFloat("material[3].shininess", 16);
+	setFloat("material[3].shininess", 32);
 
 }
 

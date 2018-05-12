@@ -130,7 +130,7 @@ void main()
       }
       else if(vegetationModifier < currentSeason.grassLevel){
         if(vegetationModifier < currentSeason.waterLevel + lerpRange){
-          lerpMaterial(material[1], material[0], ((currentSeason.waterLevel + lerpRange) - vegetationModifier)/0.05);
+          lerpMaterial(material[1], material[0], ((currentSeason.waterLevel + lerpRange) - vegetationModifier)/lerpRange);
         }
         else {
           materialAmbient = material[1].ambient;
@@ -141,7 +141,7 @@ void main()
       }
       else if(vegetationModifier < currentSeason.brownLevel){
         if(vegetationModifier < currentSeason.grassLevel + lerpRange){
-          lerpMaterial(material[2], material[1], ((currentSeason.grassLevel + lerpRange) - vegetationModifier)/0.05);
+          lerpMaterial(material[2], material[1], ((currentSeason.grassLevel + lerpRange) - vegetationModifier)/lerpRange);
         }
         else {
         materialAmbient = material[2].ambient;
@@ -152,7 +152,7 @@ void main()
       }
       else if(vegetationModifier < currentSeason.snowLevel){
         if(vegetationModifier < currentSeason.brownLevel + lerpRange){
-          lerpMaterial(material[3], material[2], ((currentSeason.brownLevel + lerpRange) - vegetationModifier)/0.05);
+          lerpMaterial(material[3], material[2], ((currentSeason.brownLevel + lerpRange) - vegetationModifier)/lerpRange);
         }
         else {
         materialAmbient = material[3].ambient;
