@@ -69,6 +69,8 @@ uniform vec3 viewPos;
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 LerpColor(vec3 beginningColor, vec3 targetColor, float lerpPos);
+float lerp(float v0, float v1, float t);
 
 
 vec3 materialAmbient;
@@ -84,29 +86,53 @@ void main()
 
     float vegetationModifier = pos.y/100.0f;
 
-    if(vegetationModifier < 0.18f){
+    if(vegetationModifier < 0.15f){
       materialAmbient = material[0].ambient;
       materialDiffuse = material[0].diffuse;
       materialSpecular = material[0].specular;
       materialShininess = material[0].shininess;
     }
     else if(vegetationModifier < 0.35f){
-      materialAmbient = material[1].ambient;
-      materialDiffuse = material[1].diffuse;
-      materialSpecular = material[1].specular;
-      materialShininess = material[1].shininess;
+      if(vegetationModifier < 0.20f){
+        materialAmbient = LerpColor(material[1].ambient, material[0].ambient, (0.20f - vegetationModifier)/0.05);
+        materialDiffuse = LerpColor(material[1].diffuse, material[0].diffuse, (0.20f - vegetationModifier)/0.05);
+        materialSpecular = LerpColor(material[1].specular, material[0].specular, (0.20f - vegetationModifier)/0.05);
+        materialShininess = lerp(material[1].shininess, material[0].shininess, (0.20f - vegetationModifier)/0.05);
+      }
+      else {
+        materialAmbient = material[1].ambient;
+        materialDiffuse = material[1].diffuse;
+        materialSpecular = material[1].specular;
+        materialShininess = material[1].shininess;
+      }
     }
     else if(vegetationModifier < 0.70f){
+      if(vegetationModifier < 0.40f){
+        materialAmbient = LerpColor(material[2].ambient, material[1].ambient, (0.40f - vegetationModifier)/0.05);
+        materialDiffuse = LerpColor(material[2].diffuse, material[1].diffuse, (0.40f - vegetationModifier)/0.05);
+        materialSpecular = LerpColor(material[2].specular, material[1].specular, (0.40f - vegetationModifier)/0.05);
+        materialShininess = lerp(material[2].shininess, material[1].shininess, (0.40f - vegetationModifier)/0.05);
+      }
+      else {
       materialAmbient = material[2].ambient;
       materialDiffuse = material[2].diffuse;
       materialSpecular = material[2].specular;
       materialShininess = material[2].shininess;
+      }
     }
     else if(vegetationModifier < 1.00f){
+      if(vegetationModifier < 0.75f){
+        materialAmbient = LerpColor(material[3].ambient, material[2].ambient, (0.75f - vegetationModifier)/0.05);
+        materialDiffuse = LerpColor(material[3].diffuse, material[2].diffuse, (0.75f - vegetationModifier)/0.05);
+        materialSpecular = LerpColor(material[3].specular, material[2].specular, (0.75f - vegetationModifier)/0.05);
+        materialShininess = lerp(material[3].shininess, material[2].shininess, (0.75f - vegetationModifier)/0.05);
+      }
+      else {
       materialAmbient = material[3].ambient;
       materialDiffuse = material[3].diffuse;
       materialSpecular = material[3].specular;
       materialShininess = material[3].shininess;
+      }
     }
     //vec3 color = vec3(1.0f)*colorModifier;
     //vec3 result = CalcDirLight(dirLight, norm, viewDir);
@@ -200,4 +226,16 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
+}
+
+vec3 LerpColor(vec3 beginningColor, vec3 targetColor, float lerpPos){
+    vec3 ResultColor;
+    ResultColor.x = lerp(beginningColor.x, targetColor.x, lerpPos);
+    ResultColor.y = lerp(beginningColor.y, targetColor.y, lerpPos);
+    ResultColor.z = lerp(beginningColor.z, targetColor.z, lerpPos);
+    return ResultColor;
+}
+
+float lerp(float v0, float v1, float t){
+    return (1 - t) * v0 + t * v1;
 }

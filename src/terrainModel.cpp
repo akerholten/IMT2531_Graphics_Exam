@@ -92,6 +92,17 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 	}
 
 	generateIndexBuffer();
+	for (int i = 0; i < 6; i++) {
+		generateNormals(i);
+	}
+
+	for (int i = 0; i < indices.size(); i++) {
+		vertices[indices[i]].Normal = glm::normalize(vertices[indices[i]].Normal);
+	}
+
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].Normal = glm::normalize(vertices[i].Normal);
+	}
 
 	std::vector<Texture> texture;
 	Material terrainMaterial;
@@ -142,22 +153,26 @@ void terrainModel::generateIndexBuffer() {
 	}
 }
 
-void terrainModel::generateNormals() {
-	for (int i = 0; i < indices.size(); i += 3) {
+void terrainModel::generateNormals(int offset) {
+	for (int i = offset; i < indices.size() - 3; i += 3) {
 		glm::vec3 v0 = vertices[indices[i+0]].Position;
 		glm::vec3 v1 = vertices[indices[i+1]].Position;
 		glm::vec3 v2 = vertices[indices[i+2]].Position;
 
-		glm::vec3 normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
+		glm::vec3 normal = glm::cross(v2 - v0, v1 - v0);
 
 		vertices[indices[i+0]].Normal += normal;
 		vertices[indices[i+1]].Normal += normal;
 		vertices[indices[i+2]].Normal += normal;
 	}
+	/*
+	for (int i = 0; i < indices.size(); i++) {
+		vertices[indices[i]].Normal = glm::normalize(vertices[indices[i]].Normal);
+	}
 
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].Normal = glm::normalize(vertices[i].Normal);
-	}
+	}*/
 }
 
 float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x, int y) {
