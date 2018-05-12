@@ -123,8 +123,7 @@ int main() {
 	terrainModel terrain("assets/heightmap/height100.png");
 	terrain.scale(0.2f);
 	skyboxModel skybox("assets/skybox/skybox");
-	//Model model2("assets/models/nano/nanosuit.obj");
-	//Model city("assets/models/box.obj");
+
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
 	Shader skyboxShader("shaders/skyboxVertex.vert", "shaders/skyboxFragment.frag");
