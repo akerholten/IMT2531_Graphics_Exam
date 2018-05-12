@@ -20,6 +20,36 @@ struct Texture {
 	std::string path; 
 };
 
+struct KeyInput {
+
+	bool wKey;
+	bool aKey;
+	bool sKey;
+	bool dKey;
+	bool oKey;
+
+	bool zeroKey;
+	bool oneKey;
+	bool twoKey;
+	bool threeKey;
+	bool fourKey;
+	bool fiveKey;
+	bool sixKey;
+	bool sevenKey;
+	bool eightKey;
+	bool nineKey;
+
+	bool spaceKey;
+	bool lCtrlKey;
+
+	// arrows
+	bool up;
+	bool down;
+	bool left;
+	bool right;
+	bool escKey;
+};
+
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
