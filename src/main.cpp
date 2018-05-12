@@ -55,6 +55,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 bool lightToggle = false;
+bool drawContour = false;
 
 int main() {
 
@@ -208,7 +209,7 @@ int main() {
 		terrainShader.setMat4("view", view);
 		terrainShader.setInt("currentSeasonId", currentSeason);
 		terrainShader.setFloat("seasonLerpPos", currentSeasonLerp);
-		terrainShader.setBool("contourLines", true);
+		terrainShader.setBool("contourLines", drawContour);
 		terrain.Draw(terrainShader);
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
@@ -246,6 +247,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+		drawContour = !drawContour;
 		
 }
 
