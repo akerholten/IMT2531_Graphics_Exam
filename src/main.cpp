@@ -101,7 +101,7 @@ int main() {
 	objectModel model("assets/models/model/ask21mi.obj");
 	terrainModel terrain("assets/heightmap/height100.png");
 	terrain.scale(0.2f);
-	skyboxModel skybox("assets/skybox/skybox");
+	skyboxModel skybox("assets/skybox/skybox", ".jpg");
 
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");

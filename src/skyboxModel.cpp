@@ -5,10 +5,10 @@ skyboxModel::skyboxModel() {
 
 }
 
-skyboxModel::skyboxModel(char *path) {
+skyboxModel::skyboxModel(char *path, std::string filetype) {
 	init();
 
-	loadModel(path);
+	loadModel(path, filetype);
 }
 
 void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
@@ -27,16 +27,16 @@ void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
 	glDepthFunc(GL_LESS); // set depth function back to default
 }
 
-void skyboxModel::loadModel(std::string path) {
+void skyboxModel::loadModel(std::string path, std::string filetype) {
 	std::string directory = path.append("/");
 	
 	faces = {
-		"right.jpg",
-		"left.jpg",
-		"top.jpg",
-		"bottom.jpg",
-		"front.jpg",
-		"back.jpg"
+		"right" + filetype,
+		"left" + filetype,
+		"top" + filetype,
+		"bottom" + filetype,
+		"front" + filetype,		// Front and back are
+		"back" + filetype		// flipped on some cubemaps.
 	};
 
 	cubemapTexture = loadCubeMap(faces, directory);
