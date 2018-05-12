@@ -5,6 +5,7 @@
 #include "camera.hpp"
 #include "objectModel.hpp"
 #include "terrainModel.hpp"
+#include "skyboxModel.hpp"
 
 void testLight(Shader& shader) {
 
@@ -117,10 +118,12 @@ int main() {
 	objectModel model("assets/models/model/ask21mi.obj");
 	terrainModel terrain("assets/heightmap/height100.png");
 	terrain.scale(0.2f);
+	skyboxModel skybox("assets/skybox/ame_desert");
 	//Model model2("assets/models/nano/nanosuit.obj");
 	//Model city("assets/models/box.obj");
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
+	Shader skyboxShader("shaders/skyboxVertex.vert", "shaders/skyboxFragment.frag");
 	terrainShader.setOnlyMaterials(true);
 	float lastFrame = 0;
 
@@ -188,6 +191,9 @@ int main() {
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
 		terrain.Draw(terrainShader);
+
+		skybox.Draw(skyboxShader, view, projection);
+		
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

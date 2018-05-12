@@ -90,13 +90,13 @@ void main()
       materialSpecular = material[0].specular;
       materialShininess = material[0].shininess;
     }
-    else if(vegetationModifier < 0.4f){
+    else if(vegetationModifier < 0.35f){
       materialAmbient = material[1].ambient;
       materialDiffuse = material[1].diffuse;
       materialSpecular = material[1].specular;
       materialShininess = material[1].shininess;
     }
-    else if(vegetationModifier < 0.75f){
+    else if(vegetationModifier < 0.70f){
       materialAmbient = material[2].ambient;
       materialDiffuse = material[2].diffuse;
       materialSpecular = material[2].specular;
