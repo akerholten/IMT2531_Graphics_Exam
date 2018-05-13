@@ -26,5 +26,11 @@
 ###### Add FreeType for showing UI/Text
 - Description: Wanting to display text elements, such as time of day and current season
 - Possible solution: Include freetype, and display text in a relative "2D" space
+- State: Done
 
 ## 1 TODO:
+
+###### Display plane speed as UI/Text
+- Description: Display text on screen representing the speed the plane is going at
+- Possible solution: Retrieve speed from plane class and draw with FreeType
+- State: 

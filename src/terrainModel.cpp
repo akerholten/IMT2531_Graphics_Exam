@@ -14,6 +14,12 @@ terrainModel::terrainModel(char* path) {
 	loadModel(path);
 }
 
+glm::vec3 terrainModel::calculateMidPoint() {
+	// To calculate proper midpoint
+	// Halfway down in Y * Pixels in each row + one row/2
+	return vertices[(imageHeight / 2) * imageWidth + (imageWidth / 2)].Position;
+}
+
 void terrainModel::loadModel(std::string path) {
 	HeightmapFromFile(path.c_str());
 }

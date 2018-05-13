@@ -46,6 +46,7 @@ int currentSeason = 0;
 bool lerpTime = true;
 int currentTime = 0;
 float currentTimeLerp = 0.0f;
+bool resetPlanePosition = false;
 
 int currentScreenHeight = SCR_HEIGHT;
 int currentScreenWidth	= SCR_WIDTH;
@@ -119,7 +120,8 @@ int main() {
 
 
 	terrainModel terrain("assets/heightmap/height50.png");
-	terrain.scale(0.2f);
+	//terrain.scale(0.2f);
+	plane.getMidPoint(terrain.calculateMidPoint());
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
 
 	Shader shader("shaders/modelVertex.vert", "shaders/modelFragment.frag");
@@ -140,11 +142,13 @@ int main() {
 
 
 																	// view/projection transformations
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+	glm::mat4 projection =	glm::perspective(glm::radians(camera.Zoom), 
+							(float)currentScreenWidth/(float)currentScreenHeight, 
+							MIN_RENDER_DISTANCE, MAX_RENDER_DISTANCE);
 
 	//model.translate(glm::vec3(0.25f*504, 30.0f, 0.25f*1004));
 	//model.translate(glm::vec3(0.03f * 504, 30.0f, 0.50f * 1004));
-	plane.translate(glm::vec3(-0.03f*504, 30.0f, 0.50f * 1004));
+	plane.resetToOriginalPosition();
 	//plane.scale(2.0f);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -177,6 +181,11 @@ int main() {
 			camera.followPlane(plane.getTransform());
 		}
 
+		if (resetPlanePosition) {
+			plane.resetToOriginalPosition();
+			resetPlanePosition = false;
+		}
+
 		light.lerpLight(currentTime, currentTimeLerp);
 		
 
@@ -185,8 +194,10 @@ int main() {
 
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 
+		glm::mat4 projection =	glm::perspective(glm::radians(camera.Zoom), 
+								(float)currentScreenWidth / (float)currentScreenHeight,
+								MIN_RENDER_DISTANCE, MAX_RENDER_DISTANCE);
 
 		glm::mat4 view = camera.GetViewMatrix();
 		shader.use();
@@ -209,6 +220,7 @@ int main() {
 		terrainShader.setInt("currentSeasonId", currentSeason);
 		terrainShader.setFloat("seasonLerpPos", currentSeasonLerp);
 		terrainShader.setBool("contourLines", drawContour);
+		terrainShader.setFloat("MAX_HEIGHT", (float)LEVEL_MAX_HEIGHT);
 		terrain.Draw(terrainShader);
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
@@ -345,6 +357,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			camera.cameraState = RESTRICTEDCAM;
 		else if (camera.cameraState == RESTRICTEDCAM) 
 			camera.cameraState = FOLLOWPLANE;
+	}
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		resetPlanePosition = true;
 	}
 }
 

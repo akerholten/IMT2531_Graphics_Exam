@@ -71,6 +71,7 @@ uniform vec3 viewPos;
 uniform int currentSeasonId;
 uniform float seasonLerpPos;
 uniform bool contourLines;
+uniform float MAX_HEIGHT;
 //vec3 diffuseColor;
 //vec3 specularColor;
 
@@ -115,7 +116,7 @@ void main()
       currentSeason.snowLevel = lerp(season[currentSeasonId].snowLevel, season[0].snowLevel, seasonLerpPos);
     }
 
-    float vegetationModifier = pos.y/100.0f;
+    float vegetationModifier = pos.y/MAX_HEIGHT;
     float lerpRange = 0.05f;
 
     if(contourLines && withinContourRange(currentSeason, vegetationModifier)){

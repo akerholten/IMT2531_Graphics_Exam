@@ -13,6 +13,7 @@ public:
 	void update(float deltaTime, KeyInput keys);
 	void setNewPosition();
 	void resetToOriginalPosition();
+	void getMidPoint(glm::vec3 mid);
 	glm::vec3 currentPosition();
 private:
 	glm::vec3 velocity;
@@ -20,6 +21,8 @@ private:
 
 	glm::vec3 Front;
 	glm::vec3 Right;
+
+	glm::vec3 MidPoint;
 
 	float Yaw;
 	float Pitch;

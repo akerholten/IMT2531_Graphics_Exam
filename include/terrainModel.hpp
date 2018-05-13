@@ -8,6 +8,8 @@ class terrainModel : public Model {
 public:
 	terrainModel();
 	terrainModel(char* path);
+
+	glm::vec3 calculateMidPoint();
 private:
 	float blockScale;
 	int terrainMaxHeight;
