@@ -41,6 +41,8 @@ struct KeyInput {
 
 	bool spaceKey;
 	bool lCtrlKey;
+	bool commaKey;
+	bool dotKey;
 
 	// arrows
 	bool up;

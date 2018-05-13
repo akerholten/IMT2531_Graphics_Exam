@@ -7,7 +7,7 @@ public:
 	objectModel();
 	objectModel(char* path);
 
-private:
+protected:
 	virtual void loadModel(std::string path);
 	void processNode(aiNode *node, const aiScene *scene);
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);

@@ -7,6 +7,7 @@
 #include "skyboxModel.hpp"
 #include "light.hpp"
 #include "textController.hpp"
+#include "planeModel.hpp"
 
 
 // static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -28,12 +29,8 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-
-/*-----------CURRENTLY DEBUGGING-----------*/
-
 TextController text;
 
-/*-----------CURRENTLY DEBUGGING-----------*/
 
 // timing
 float deltaTime = 0.0f;
@@ -113,7 +110,14 @@ int main() {
 	glfwSwapInterval(1);
 
 	//Model model("assets/models/old\ man/muro.obj");
-	objectModel model("assets/models/model/ask21mi.obj");
+
+	/*-----------CURRENTLY DEBUGGING-----------*/
+
+	planeModel plane("assets/models/model/ask21mi.obj");
+
+	/*-----------CURRENTLY DEBUGGING-----------*/
+
+
 	terrainModel terrain("assets/heightmap/height100.png");
 	terrain.scale(0.2f);
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
@@ -140,8 +144,8 @@ int main() {
 
 	//model.translate(glm::vec3(0.25f*504, 30.0f, 0.25f*1004));
 	//model.translate(glm::vec3(0.03f * 504, 30.0f, 0.50f * 1004));
-	model.translate(glm::vec3(-0.03f*504, 30.0f, 0.50f * 1004));
-	model.scale(2.0f);
+	plane.translate(glm::vec3(-0.03f*504, 30.0f, 0.50f * 1004));
+	//plane.scale(2.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
@@ -187,9 +191,10 @@ int main() {
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 
-		model.rotate(25 * deltaTime, glm::vec3(0, 1, 0));
-		model.translate(glm::vec3(-15 * deltaTime, 0, 0));
-		model.Draw(shader);
+
+		plane.Draw(shader);
+		//plane.rotate(25 * deltaTime, glm::vec3(0, 1, 0));
+		//plane.translate(glm::vec3(-15 * deltaTime, 0, 0));
 
 		terrainShader.use();
 		light.sendLightToShader(terrainShader, camera);
@@ -224,11 +229,13 @@ int main() {
 		currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 		
 		KeyInput keyInput;
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
 		keyInput = getKeyInput(window);
 		updateWithInput(keyInput, window);
+		plane.update(deltaTime, keyInput);
 		
 	}
 
@@ -334,15 +341,19 @@ KeyInput getKeyInput(GLFWwindow *window) {
 	returnInput.sKey		= glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
 	returnInput.aKey		= glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
 	returnInput.dKey		= glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
+	returnInput.up			= glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
+	returnInput.down		= glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
+	returnInput.left		= glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
+	returnInput.right		= glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
 	return returnInput;
 };
 
 
 void updateWithInput(KeyInput keys, GLFWwindow *window) {
-	if (keys.wKey)		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (keys.sKey)		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (keys.aKey)		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (keys.dKey)		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (keys.up)		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (keys.down)		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (keys.left)		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (keys.right)		camera.ProcessKeyboard(RIGHT, deltaTime);
 };
 
 std::string currentSeasonToString(int currentSeason, float seasonLerp) {
