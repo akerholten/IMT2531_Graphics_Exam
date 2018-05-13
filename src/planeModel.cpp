@@ -4,7 +4,7 @@ planeModel::planeModel() {
 	velocity = glm::vec3(-5.0f, 0.0f, 0.0f);
 	rotationSpeed = 30.0f;
 	acceleration = 2.0f;
-	maxSpeed = 300.0f;
+	maxSpeed = 50.0f;
 	minSpeed = 2.5f;
 	currentSpeed = 2.5f;
 
@@ -15,7 +15,7 @@ planeModel::planeModel(char *path) {
 	velocity = glm::vec3(-5.0f, 0.0f, 0.0f);
 	rotationSpeed = 30.0f;
 	acceleration = 2.0f;
-	maxSpeed = 300.0f;
+	maxSpeed = 30.0f;
 	minSpeed = 2.5f;
 	currentSpeed = 2.5f;
 
@@ -56,11 +56,9 @@ void planeModel::setNewPosition() {
 	translate(newPos);
 	if (newPos.z < MidPoint.z) {
 		rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-		std::cout << "BELOW MID\n";
 	}
 	else {
 		rotate(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-		std::cout << "Above MID\n";
 	}
 }
 
@@ -72,6 +70,13 @@ void planeModel::resetToOriginalPosition() {
 
 void planeModel::getMidPoint(glm::vec3 mid) {
 	MidPoint = mid;
+}
+
+std::string planeModel::currentSpeedAsText() {
+	std::string returnSpeed = std::to_string((int)(currentSpeed*10));
+	returnSpeed.append(" km/h");
+
+	return returnSpeed;
 }
 
 glm::vec3 planeModel::currentPosition() {

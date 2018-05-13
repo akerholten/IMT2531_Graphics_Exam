@@ -231,11 +231,16 @@ int main() {
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		skybox.Draw(skyboxShader, view, projection);
 
-		float screenHeight = currentScreenHeight - currentScreenHeight / 15.0f;
+		
 		/*
 		------- Render Text -------
 		(Shader, textToDisplay, startX, startY, scale, vec3 color)
+
+		A bit ugly piece of code, but there is alot of variables that it
+		can get from here. Hope the argument comment above can show a bit easier
+		what is sent to it.
 		*/
+		float screenHeight = currentScreenHeight - currentScreenHeight / 15.0f;
 
 		std::string seasonAsText = currentSeasonToString(currentSeason, currentSeasonLerp);
 		text.RenderText(textShader, seasonAsText,
@@ -249,6 +254,14 @@ int main() {
 		text.RenderText(textShader, timeAsText,
 		currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 		
+		if (camera.cameraState == FOLLOWPLANE) {
+			text.RenderText(textShader, plane.currentSpeedAsText(),
+				currentScreenWidth - currentScreenWidth / 6.0f, screenHeight/10.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+			text.RenderText(textShader, plane.currentSpeedAsText(),
+				currentScreenWidth - currentScreenWidth / 6.0f - 5.0f, screenHeight/10.0f, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
+
+		}
+
 		KeyInput keyInput;
 
 		glfwSwapBuffers(window);

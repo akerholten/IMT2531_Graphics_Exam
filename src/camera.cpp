@@ -8,7 +8,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
-	cameraState = FREEROAM;
+	cameraState = FOLLOWPLANE;
 	updateCameraVectors();
 }
 
@@ -20,7 +20,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	WorldUp = glm::vec3(upX, upY, upZ);
 	Yaw = yaw;
 	Pitch = pitch;
-	cameraState = FREEROAM;
+	cameraState = FOLLOWPLANE;
 	updateCameraVectors();
 }
 

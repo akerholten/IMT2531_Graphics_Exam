@@ -16,6 +16,7 @@ public:
 	void setNewPosition();
 	void resetToOriginalPosition();
 	void getMidPoint(glm::vec3 mid);
+	std::string currentSpeedAsText();
 	glm::vec3 currentPosition();
 private:
 	glm::vec3 velocity;
