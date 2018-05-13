@@ -17,7 +17,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 KeyInput getKeyInput(GLFWwindow *window);
 void updateWithInput(KeyInput keys, GLFWwindow *window);
-std::string currentSeasonToString(int currentSeason);
+std::string currentSeasonToString(int currentSeason, float seasonLerp);
 float lerp(float v0, float v1, float t);
 std::string currentTimeToString(int currentTime, float currentTimeLerp);
 
@@ -210,9 +210,11 @@ int main() {
 		------- Render Text -------
 		(Shader, textToDisplay, startX, startY, scale, vec3 color)
 		*/
-		text.RenderText(textShader, currentSeasonToString(currentSeason), 
+
+		std::string seasonAsText = currentSeasonToString(currentSeason, currentSeasonLerp);
+		text.RenderText(textShader, seasonAsText,
 		25.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-		text.RenderText(textShader, currentSeasonToString(currentSeason), 
+		text.RenderText(textShader, seasonAsText,
 		20.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 
 		std::string timeAsText = currentTimeToString(currentTime, currentTimeLerp);
@@ -343,11 +345,28 @@ void updateWithInput(KeyInput keys, GLFWwindow *window) {
 	if (keys.dKey)		camera.ProcessKeyboard(RIGHT, deltaTime);
 };
 
-std::string currentSeasonToString(int currentSeason) {
-	if		(currentSeason == 0) return "Winter";
-	else if (currentSeason == 1) return "Spring";
-	else if (currentSeason == 2) return "Summer";
-	else if (currentSeason == 3) return "Autumn";
+std::string currentSeasonToString(int currentSeason, float seasonLerp) {
+	if (currentSeason == 0) {
+		if		(seasonLerp < 0.33f) return "Winter, December";
+		else if (seasonLerp < 0.67f) return "Winter, January";
+		else if (seasonLerp <= 1.0f) return "Winter, February";
+	}
+	else if (currentSeason == 1) {
+		if		(seasonLerp < 0.33f) return "Spring, March";
+		else if (seasonLerp < 0.67f) return "Spring, April";
+		else if (seasonLerp <= 1.0f) return "Spring, May";
+	}
+
+	else if (currentSeason == 2) {
+		if		(seasonLerp < 0.33f) return "Summer, June";
+		else if (seasonLerp < 0.67f) return "Summer, July";
+		else if (seasonLerp <= 1.0f) return "Summer, August";
+	}
+	else if (currentSeason == 3) {
+		if		(seasonLerp < 0.33f) return "Autumn, September";
+		else if (seasonLerp < 0.67f) return "Autumn, October";
+		else if (seasonLerp <= 1.0f) return "Autumn, November";
+	}
 };
 
 std::string currentTimeToString(int currentTime, float currentTimeLerp) {

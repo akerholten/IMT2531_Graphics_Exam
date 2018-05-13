@@ -159,7 +159,7 @@ void terrainModel::generateNormals(int offset) {
 		glm::vec3 v1 = vertices[indices[i+1]].Position;
 		glm::vec3 v2 = vertices[indices[i+2]].Position;
 
-		glm::vec3 normal = glm::cross(v2 - v0, v1 - v0);
+		glm::vec3 normal = glm::cross(v2 - v0, v1 - v0); //(v2 - v0, v1 - v0) (v1 - v0, v2 - v0)
 
 		vertices[indices[i+0]].Normal += normal;
 		vertices[indices[i+1]].Normal += normal;
