@@ -37,11 +37,15 @@ void Camera::followPlane(glm::mat4 planeTransform) {
 	glm::vec3 planePosition;
 	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
 	
-	glm::mat4 rotationMatrix = glm::toMat4(rotation);
-	glm::vec3 currentUp = glm::normalize(glm::cross(Up, rotation));
+	//glm::mat4 rotationMatrix = glm::toMat4(rotation);
+	glm::vec3 currentUp = glm::normalize(glm::cross(WorldUp, rotation));
 	glm::vec3 currentFront = glm::normalize(glm::cross(glm::vec3(-1.0f, 0.0f, 0.0f), rotation));
-	Position = planePosition - currentFront;
+	Front = currentFront;
+	Position = planePosition - (currentFront * 20.0f);
+	//Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	//Up = glm::normalize(glm::cross(Right, Front));
 	followPlaneView = glm::lookAt(Position, planePosition, currentUp);
+
 }
 
 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -126,6 +130,10 @@ void Camera::updateCameraVectors()
 		front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 		Front = glm::normalize(front);
 		// Also re-calculate the Right and Up vector
+		Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+		Up = glm::normalize(glm::cross(Right, Front));
+	}
+	else {
 		Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 		Up = glm::normalize(glm::cross(Right, Front));
 	}
