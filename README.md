@@ -13,3 +13,5 @@ https://stackoverflow.com/questions/48286572/opengl-heightmap-terrain-and-normal
 http://www.bluemoonproductions.nl/tutorials/3d-terrain-using-a-heightmap/
 
 https://learnopengl.com/Advanced-OpenGL/Cubemaps
+
+http://assimp.sourceforge.net/lib_html/materials.html

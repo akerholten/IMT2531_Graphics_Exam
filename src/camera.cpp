@@ -8,6 +8,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
+	cameraState = FREEROAM;
 	updateCameraVectors();
 }
 
@@ -19,6 +20,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	WorldUp = glm::vec3(upX, upY, upZ);
 	Yaw = yaw;
 	Pitch = pitch;
+	cameraState = FREEROAM;
 	updateCameraVectors();
 }
 
@@ -32,14 +34,37 @@ glm::mat4 Camera::GetViewMatrix()
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 {
 	float velocity = MovementSpeed * deltaTime;
-	if (direction == FORWARD)
-		Position += Front * velocity;
-	if (direction == BACKWARD)
-		Position -= Front * velocity;
-	if (direction == LEFT)
-		Position -= Right * velocity;
-	if (direction == RIGHT)
-		Position += Right * velocity;
+	if (cameraState == FREEROAM) {
+		if (direction == FORWARD)
+			Position += Front * velocity;
+		if (direction == BACKWARD)
+			Position -= Front * velocity;
+		if (direction == LEFT)
+			Position -= Right * velocity;
+		if (direction == RIGHT)
+			Position += Right * velocity;
+	}
+	else if (cameraState == RESTRICTEDCAM) {
+		glm::vec3 xMove = glm::vec3(1.0f, 0.0f, 0.0f);
+		glm::vec3 yMove = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 zMove = glm::vec3(0.0f, 0.0f, 1.0f);
+		
+		if (direction == FORWARD)
+			Position += zMove * velocity;
+		if (direction == BACKWARD)
+			Position -= zMove * velocity;
+		if (direction == LEFT)
+			Position += xMove * velocity;
+		if (direction == RIGHT)
+			Position -= xMove * velocity;
+		if (direction == UP)
+			Position += yMove * velocity;
+		if (direction == DOWN)
+			Position -= yMove * velocity;
+	}
+	else if (cameraState == FOLLOWPLANE) {
+
+	}
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

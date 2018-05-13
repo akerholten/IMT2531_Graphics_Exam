@@ -5,8 +5,8 @@ planeModel::planeModel() {
 	rotationSpeed = 10.0f;
 	acceleration = 2.0f;
 	maxSpeed = 300.0f;
-	minSpeed = 0.05f;
-	currentSpeed = 0.05f;
+	minSpeed = 0.5f;
+	currentSpeed = 0.5f;
 }
 
 planeModel::planeModel(char *path) {
@@ -14,8 +14,8 @@ planeModel::planeModel(char *path) {
 	rotationSpeed = 10.0f;
 	acceleration = 2.0f;
 	maxSpeed = 300.0f;
-	minSpeed = 0.05f;
-	currentSpeed = 0.05f;
+	minSpeed = 0.55f;
+	currentSpeed = 0.5f;
 
 	loadModel(path);
 }

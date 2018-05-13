@@ -122,7 +122,7 @@ int main() {
 	terrain.scale(0.2f);
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
 
-	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
+	Shader shader("shaders/modelVertex.vert", "shaders/modelFragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
 	Shader skyboxShader("shaders/skyboxVertex.vert", "shaders/skyboxFragment.frag");
 	Shader textShader("shaders/freetypeVertex.vert", "shaders/freetypeFragment.frag");
@@ -333,6 +333,15 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
 		lerpTime = !lerpTime;
 	}
+	if (glfwGetKey(window, GLFW_KEY_SLASH) == GLFW_PRESS) {
+		// Debug and realized GLFW_KEY_MINUS is + on european keyboard?
+		if(camera.cameraState == FOLLOWPLANE) 
+			camera.cameraState = FREEROAM;
+		else if(camera.cameraState == FREEROAM) 
+			camera.cameraState = RESTRICTEDCAM;
+		else if (camera.cameraState == RESTRICTEDCAM) 
+			camera.cameraState = FOLLOWPLANE;
+	}
 }
 
 KeyInput getKeyInput(GLFWwindow *window) {
@@ -341,10 +350,19 @@ KeyInput getKeyInput(GLFWwindow *window) {
 	returnInput.sKey		= glfwGetKey(window, GLFW_KEY_S)		== GLFW_PRESS;
 	returnInput.aKey		= glfwGetKey(window, GLFW_KEY_A)		== GLFW_PRESS;
 	returnInput.dKey		= glfwGetKey(window, GLFW_KEY_D)		== GLFW_PRESS;
+	
 	returnInput.up			= glfwGetKey(window, GLFW_KEY_UP)		== GLFW_PRESS;
 	returnInput.down		= glfwGetKey(window, GLFW_KEY_DOWN)		== GLFW_PRESS;
 	returnInput.left		= glfwGetKey(window, GLFW_KEY_LEFT)		== GLFW_PRESS;
 	returnInput.right		= glfwGetKey(window, GLFW_KEY_RIGHT)	== GLFW_PRESS;
+	
+	returnInput.iKey		= glfwGetKey(window, GLFW_KEY_I)		== GLFW_PRESS;
+	returnInput.kKey		= glfwGetKey(window, GLFW_KEY_K)		== GLFW_PRESS;
+	returnInput.jKey		= glfwGetKey(window, GLFW_KEY_J)		== GLFW_PRESS;
+	returnInput.lKey		= glfwGetKey(window, GLFW_KEY_L)		== GLFW_PRESS;
+	returnInput.yKey		= glfwGetKey(window, GLFW_KEY_Y)		== GLFW_PRESS;
+	returnInput.hKey		= glfwGetKey(window, GLFW_KEY_H)		== GLFW_PRESS;
+
 	returnInput.commaKey	= glfwGetKey(window, GLFW_KEY_COMMA)	== GLFW_PRESS;
 	returnInput.dotKey		= glfwGetKey(window, GLFW_KEY_PERIOD)	== GLFW_PRESS;
 	return returnInput;
@@ -352,10 +370,12 @@ KeyInput getKeyInput(GLFWwindow *window) {
 
 
 void updateWithInput(KeyInput keys, GLFWwindow *window) {
-	if (keys.up)		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (keys.down)		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (keys.left)		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (keys.right)		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (keys.iKey)		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (keys.kKey)		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (keys.jKey)		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (keys.lKey)		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (keys.yKey)		camera.ProcessKeyboard(UP, deltaTime);
+	if (keys.hKey)		camera.ProcessKeyboard(DOWN, deltaTime);
 };
 
 std::string currentSeasonToString(int currentSeason, float seasonLerp) {

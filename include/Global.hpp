@@ -28,6 +28,13 @@ struct KeyInput {
 	bool dKey;
 	bool oKey;
 
+	bool iKey;
+	bool jKey;
+	bool kKey;
+	bool lKey;
+	bool yKey;
+	bool hKey;
+
 	bool zeroKey;
 	bool oneKey;
 	bool twoKey;
@@ -41,6 +48,7 @@ struct KeyInput {
 
 	bool spaceKey;
 	bool lCtrlKey;
+	bool minusKey;
 	bool commaKey;
 	bool dotKey;
 
@@ -51,6 +59,7 @@ struct KeyInput {
 	bool right;
 	bool escKey;
 };
+
 
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
