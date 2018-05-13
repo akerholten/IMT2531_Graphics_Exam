@@ -18,6 +18,10 @@
 
 ## 2 TODO:
 
+###### Add randomized spawn for plane on 'F' press
+- Description: Add proper randomized spawn on 'F' press on plane
+- Possible solution: Calculate out from midpoint to ensure it is within the range of the level
+
 ###### Smooth out vegetation on terrainShader
 - Description: Vegetation is showing, but wanting to smooth/"fade" the vegetation when it is close to a new type
 - Possible solution: Some kind of interpolation or something similar to spotlight "smooth"?
@@ -33,4 +37,4 @@
 ###### Display plane speed as UI/Text
 - Description: Display text on screen representing the speed the plane is going at
 - Possible solution: Retrieve speed from plane class and draw with FreeType
-- State: 
+- State:
