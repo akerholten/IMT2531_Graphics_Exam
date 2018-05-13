@@ -118,7 +118,7 @@ int main() {
 	/*-----------CURRENTLY DEBUGGING-----------*/
 
 
-	terrainModel terrain("assets/heightmap/height100.png");
+	terrainModel terrain("assets/heightmap/height50.png");
 	terrain.scale(0.2f);
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
 

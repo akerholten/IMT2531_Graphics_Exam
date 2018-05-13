@@ -41,7 +41,6 @@ public:
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
 
-	glm::vec3 lastPlanePosition;
 	glm::mat4 followPlaneView;
 	// Euler Angles
 	float Yaw;
@@ -52,7 +51,6 @@ public:
 	float MouseSensitivity;
 	float Zoom;
 
-	int waitForPos;
 
 	CameraState cameraState;
 
