@@ -6,6 +6,7 @@
 #include "terrainModel.hpp"
 #include "skyboxModel.hpp"
 #include "light.hpp"
+#include "textController.hpp"
 
 
 // static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -94,6 +95,14 @@ int main() {
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
+
+
+	/*-----------CURRENTLY DEBUGGING-----------*/
+
+	TextController text;
+	text.init();
+
+	/*-----------CURRENTLY DEBUGGING-----------*/
 
 	glfwSwapInterval(1);
 
