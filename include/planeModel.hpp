@@ -3,6 +3,8 @@
 
 #include "objectModel.hpp"
 #include "gtx/matrix_decompose.hpp"
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 
 class planeModel : public objectModel {

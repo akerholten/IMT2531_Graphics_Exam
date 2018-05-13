@@ -8,9 +8,9 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 
 
 ###### Bug template:
-- Description: *Mandatory
-- Possible solution: *Optional
-- Cause: *Optional *guessing is allowed
+- Description: *Mandatory*
+- Possible solution: *Optional*
+- Cause: *Optional* *guessing is allowed*
 
 
 ## LEVEL 3:

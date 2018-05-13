@@ -47,6 +47,7 @@ bool lerpTime = true;
 int currentTime = 0;
 float currentTimeLerp = 0.0f;
 bool resetPlanePosition = false;
+bool randomizePlanePosition = false;
 
 int currentScreenHeight = SCR_HEIGHT;
 int currentScreenWidth	= SCR_WIDTH;
@@ -184,6 +185,10 @@ int main() {
 		if (resetPlanePosition) {
 			plane.resetToOriginalPosition();
 			resetPlanePosition = false;
+		}
+		if (randomizePlanePosition) {
+			plane.setNewPosition();
+			randomizePlanePosition = false;
 		}
 
 		light.lerpLight(currentTime, currentTimeLerp);
@@ -360,6 +365,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 		resetPlanePosition = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		randomizePlanePosition = true;
 	}
 }
 

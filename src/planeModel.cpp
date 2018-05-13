@@ -7,6 +7,8 @@ planeModel::planeModel() {
 	maxSpeed = 300.0f;
 	minSpeed = 2.5f;
 	currentSpeed = 2.5f;
+
+	std::srand(time(NULL));
 }
 
 planeModel::planeModel(char *path) {
@@ -45,7 +47,21 @@ void planeModel::update(float deltaTime, KeyInput keys) {
 }
 
 void planeModel::setNewPosition() {
-	translate(glm::vec3(-0.03f * 504, 30.0f, 0.50f * 1004));
+	transform = glm::mat4(1.0f);
+	int maxX = MidPoint.x * 2;
+	int maxZ = MidPoint.z * 2;
+	glm::vec3 newPos = glm::vec3((float)(rand() % maxX), 
+								(float)(LEVEL_MAX_HEIGHT * 0.90f), 
+								(float)(rand() % maxZ));
+	translate(newPos);
+	if (newPos.z < MidPoint.z) {
+		rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		std::cout << "BELOW MID\n";
+	}
+	else {
+		rotate(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		std::cout << "Above MID\n";
+	}
 }
 
 void planeModel::resetToOriginalPosition() {
