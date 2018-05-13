@@ -36,4 +36,9 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 ###### Skybox not always loading into appropriate places
 - Description: Sometimes the position of front and back textures are flipped on certain skybox cubemaps
 - Possible solution: Make sure it loads correctly depending on the type of cubemap files
-- Cause: 
+- Cause:
+
+###### Moving mouse after going out of plane-flight mode results in view "flipping" to last cam pos
+- Description: When going from flight-mode to free-roam camera, the camera "flips" over to the last cam pos before flight-mode started
+- Possible solution: Calculate new yaw/pitch values, and apply them to the camera after flightmode.
+- Cause: Guess: When leaving flight-mode, the camera calulates it's rotation with "yaw" and "pitch" values that have not been calculated while flying
