@@ -17,6 +17,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 KeyInput getKeyInput(GLFWwindow *window);
 void updateWithInput(KeyInput keys, GLFWwindow *window);
+std::string currentSeasonToString(int currentSeason);
+float lerp(float v0, float v1, float t);
+std::string currentTimeToString(int currentTime, float currentTimeLerp);
 
 
 // camera
@@ -46,6 +49,9 @@ int currentSeason = 0;
 bool lerpTime = true;
 int currentTime = 0;
 float currentTimeLerp = 0.0f;
+
+int currentScreenHeight = SCR_HEIGHT;
+int currentScreenWidth	= SCR_WIDTH;
 
 int main() {
 
@@ -199,8 +205,21 @@ int main() {
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		skybox.Draw(skyboxShader, view, projection);
 
-		text.RenderText(textShader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		text.RenderText(textShader, "Does it work", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+		float screenHeight = currentScreenHeight - currentScreenHeight / 15.0f;
+		/*
+		------- Render Text -------
+		(Shader, textToDisplay, startX, startY, scale, vec3 color)
+		*/
+		text.RenderText(textShader, currentSeasonToString(currentSeason), 
+		25.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		text.RenderText(textShader, currentSeasonToString(currentSeason), 
+		20.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
+
+		std::string timeAsText = currentTimeToString(currentTime, currentTimeLerp);
+		text.RenderText(textShader, timeAsText,
+		currentScreenWidth - currentScreenWidth/10.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		text.RenderText(textShader, timeAsText,
+		currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 		
 		KeyInput keyInput;
 		glfwSwapBuffers(window);
@@ -231,6 +250,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 	text.setProjection(width, height);
+	currentScreenHeight = height;
+	currentScreenWidth	= width;
 }
 
 // glfw: whenever the mouse moves, this callback is called
@@ -320,4 +341,44 @@ void updateWithInput(KeyInput keys, GLFWwindow *window) {
 	if (keys.sKey)		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	if (keys.aKey)		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys.dKey)		camera.ProcessKeyboard(RIGHT, deltaTime);
+};
+
+std::string currentSeasonToString(int currentSeason) {
+	if		(currentSeason == 0) return "Winter";
+	else if (currentSeason == 1) return "Spring";
+	else if (currentSeason == 2) return "Summer";
+	else if (currentSeason == 3) return "Autumn";
+};
+
+std::string currentTimeToString(int currentTime, float currentTimeLerp) {
+	std::string returnTime = "";
+	int time;
+
+	if		(currentTime == 0) time = lerp(0, 360, currentTimeLerp);
+	else if (currentTime == 1) time = lerp(360, 720, currentTimeLerp);
+	else if (currentTime == 2) time = lerp(720, 1080, currentTimeLerp);
+	else if (currentTime == 3) time = lerp(1080, 1440, currentTimeLerp);
+
+
+	int hours	= time / 60;
+	int minutes = time % 60;
+
+	if (hours < 10) {
+		returnTime = "0";
+		returnTime.append(std::to_string(hours));
+	}
+	else {
+		returnTime = std::to_string(hours);
+	}
+	
+	returnTime.append(":");
+
+	if(minutes < 10) returnTime.append("0");
+	returnTime.append(std::to_string(minutes));
+
+	return returnTime;
+};
+
+float lerp(float v0, float v1, float t) {
+	return (1 - t) * v0 + t * v1;
 };
