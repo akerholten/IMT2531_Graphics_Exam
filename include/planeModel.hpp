@@ -17,6 +17,13 @@ public:
 private:
 	glm::vec3 velocity;
 	glm::vec3 position;
+
+	glm::vec3 Front;
+	glm::vec3 Right;
+
+	float Yaw;
+	float Pitch;
+
 	float currentSpeed;
 	float acceleration;
 	float rotationSpeed;

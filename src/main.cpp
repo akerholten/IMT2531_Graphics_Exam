@@ -173,6 +173,10 @@ int main() {
 			}
 		}
 
+		if (camera.cameraState == FOLLOWPLANE) {
+			camera.followPlane(plane.getTransform());
+		}
+
 		light.lerpLight(currentTime, currentTimeLerp);
 		
 
