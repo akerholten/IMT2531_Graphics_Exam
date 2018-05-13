@@ -25,6 +25,13 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
+
+/*-----------CURRENTLY DEBUGGING-----------*/
+
+TextController text;
+
+/*-----------CURRENTLY DEBUGGING-----------*/
+
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -78,7 +85,7 @@ int main() {
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
 
-	glewExperimental = GL_FALSE;
+	glewExperimental = GL_TRUE;
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
@@ -97,13 +104,6 @@ int main() {
 	glViewport(0, 0, width, height);
 
 
-	/*-----------CURRENTLY DEBUGGING-----------*/
-
-	TextController text;
-	text.init();
-
-	/*-----------CURRENTLY DEBUGGING-----------*/
-
 	glfwSwapInterval(1);
 
 	//Model model("assets/models/old\ man/muro.obj");
@@ -115,11 +115,14 @@ int main() {
 	Shader shader("shaders/testvertex.vert", "shaders/testfragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
 	Shader skyboxShader("shaders/skyboxVertex.vert", "shaders/skyboxFragment.frag");
+	Shader textShader("shaders/freetypeVertex.vert", "shaders/freetypeFragment.frag");
 	terrainShader.setOnlyMaterials(true);
 	float lastFrame = 0;
 
 	Light light;
 	light.init();
+
+	text.init();
 	//light.initSpotLight();
 
 	// draw in wireframe
@@ -196,6 +199,8 @@ int main() {
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		skybox.Draw(skyboxShader, view, projection);
 
+		text.RenderText(textShader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+		text.RenderText(textShader, "Does it work", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 		
 		KeyInput keyInput;
 		glfwSwapBuffers(window);
@@ -225,6 +230,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
+	text.setProjection(width, height);
 }
 
 // glfw: whenever the mouse moves, this callback is called
