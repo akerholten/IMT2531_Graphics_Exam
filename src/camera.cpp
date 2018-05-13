@@ -9,6 +9,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	Yaw = yaw;
 	Pitch = pitch;
 	cameraState = FREEROAM;
+	lastPlanePosition = glm::vec3(0.0f);
+	waitForPos = 0;
 	updateCameraVectors();
 }
 
@@ -21,6 +23,8 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	Yaw = yaw;
 	Pitch = pitch;
 	cameraState = FREEROAM;
+	lastPlanePosition = glm::vec3(0.0f);
+	waitForPos = 0;
 	updateCameraVectors();
 }
 
@@ -36,12 +40,33 @@ void Camera::followPlane(glm::mat4 planeTransform) {
 	glm::quat rotation;
 	glm::vec3 planePosition;
 	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
+	glm::vec3 planeMovement = glm::normalize(planePosition - lastPlanePosition);
+	/*
+	------ FOLLOW PLANE EXPLAINED ------ 
+	I was trying to implement quaternion rotations to
+	make sure the camera was rotating correctly and positioning correctly 
+	behind the plane. I had some issues, so for now the quaternion rotation
+	applied to the plane are some-what correct. But for calculating where to
+	place the camera I just take an average vector of the plane's last
+	movement for the last 10 frames. This gives a pretty decent result, even
+	though it is kind of an hack.
 	
+	To do it properly I wanted to try and calculate the plane's front and up,
+	compared to world space. However, as there were som issues, this is how this 
+	function works as of now.
+	*/
+
+	waitForPos += 1;
+	if (waitForPos = 10) {
+		lastPlanePosition = planePosition;
+		waitForPos = 0;
+	}
+
 	//glm::mat4 rotationMatrix = glm::toMat4(rotation);
 	glm::vec3 currentUp = glm::normalize(glm::cross(WorldUp, rotation));
 	glm::vec3 currentFront = glm::normalize(glm::cross(glm::vec3(-1.0f, 0.0f, 0.0f), rotation));
 	Front = currentFront;
-	Position = planePosition - (currentFront * 20.0f);
+	Position = planePosition - (planeMovement * 20.0f) + WorldUp * 5.0f;
 	//Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	//Up = glm::normalize(glm::cross(Right, Front));
 	followPlaneView = glm::lookAt(Position, planePosition, currentUp);
