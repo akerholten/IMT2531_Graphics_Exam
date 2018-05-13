@@ -114,10 +114,18 @@ Mesh objectModel::processMesh(aiMesh *mesh, const aiScene *scene)
 
 	// Retrieve material data incase it doesn't use textures
 	Material meshMaterial;
-	material->Get(AI_MATKEY_COLOR_AMBIENT, meshMaterial.ambient);
-	material->Get(AI_MATKEY_COLOR_DIFFUSE, meshMaterial.diffuse);
-	material->Get(AI_MATKEY_COLOR_SPECULAR, meshMaterial.specular);
-	material->Get(AI_MATKEY_SHININESS, meshMaterial.shininess);
+	aiColor3D ambient;
+	aiColor3D diffuse;
+	aiColor3D specular;
+	float getShininess;
+	material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+	material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+	material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+	material->Get(AI_MATKEY_SHININESS, getShininess);
+	meshMaterial.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
+	meshMaterial.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+	meshMaterial.specular = glm::vec3(specular.r, specular.g, specular.b);
+	meshMaterial.shininess = getShininess;
 	// return a mesh object created from the extracted mesh data
 	return Mesh(vertices, indices, textures, meshMaterial);
 }

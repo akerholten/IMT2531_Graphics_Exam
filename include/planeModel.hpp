@@ -1,6 +1,9 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 
 #include "objectModel.hpp"
+#include "gtx/matrix_decompose.hpp"
+
 
 class planeModel : public objectModel {
 public:
@@ -9,8 +12,11 @@ public:
 	
 	void update(float deltaTime, KeyInput keys);
 	void setNewPosition();
+	void resetToOriginalPosition();
+	glm::vec3 currentPosition();
 private:
 	glm::vec3 velocity;
+	glm::vec3 position;
 	float currentSpeed;
 	float acceleration;
 	float rotationSpeed;

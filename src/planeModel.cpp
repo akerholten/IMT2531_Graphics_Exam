@@ -5,8 +5,8 @@ planeModel::planeModel() {
 	rotationSpeed = 10.0f;
 	acceleration = 2.0f;
 	maxSpeed = 300.0f;
-	minSpeed = 2.0f;
-	currentSpeed = 2.0f;
+	minSpeed = 0.05f;
+	currentSpeed = 0.05f;
 }
 
 planeModel::planeModel(char *path) {
@@ -14,8 +14,8 @@ planeModel::planeModel(char *path) {
 	rotationSpeed = 10.0f;
 	acceleration = 2.0f;
 	maxSpeed = 300.0f;
-	minSpeed = 2.0f;
-	currentSpeed = 2.0f;
+	minSpeed = 0.05f;
+	currentSpeed = 0.05f;
 
 	loadModel(path);
 }
@@ -35,12 +35,18 @@ void planeModel::update(float deltaTime, KeyInput keys) {
 		rotate(-rotationSpeed * deltaTime, glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 	if (keys.commaKey) {
-		if (currentSpeed < maxSpeed) velocity.x += acceleration * deltaTime;
+		if (currentSpeed < maxSpeed) currentSpeed += acceleration * deltaTime;
 	}
 	if (keys.dotKey) {
-		if (currentSpeed > minSpeed) velocity.x -= acceleration * deltaTime;
+		if (currentSpeed > minSpeed) currentSpeed -= acceleration * deltaTime;
 	}
 
-
 	translate(glm::vec3(-currentSpeed * deltaTime, 0.0f, 0.0f));
+}
+
+glm::vec3 planeModel::currentPosition() {
+	glm::vec3 returnPosition;
+	glm::decompose(transform, glm::vec3(), glm::quat(), returnPosition, glm::vec3(), glm::vec4());
+	position = returnPosition;
+	return returnPosition;
 }

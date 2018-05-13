@@ -337,14 +337,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 KeyInput getKeyInput(GLFWwindow *window) {
 	KeyInput returnInput;
-	returnInput.wKey		= glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
-	returnInput.sKey		= glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
-	returnInput.aKey		= glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
-	returnInput.dKey		= glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
-	returnInput.up			= glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
-	returnInput.down		= glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
-	returnInput.left		= glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
-	returnInput.right		= glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+	returnInput.wKey		= glfwGetKey(window, GLFW_KEY_W)		== GLFW_PRESS;
+	returnInput.sKey		= glfwGetKey(window, GLFW_KEY_S)		== GLFW_PRESS;
+	returnInput.aKey		= glfwGetKey(window, GLFW_KEY_A)		== GLFW_PRESS;
+	returnInput.dKey		= glfwGetKey(window, GLFW_KEY_D)		== GLFW_PRESS;
+	returnInput.up			= glfwGetKey(window, GLFW_KEY_UP)		== GLFW_PRESS;
+	returnInput.down		= glfwGetKey(window, GLFW_KEY_DOWN)		== GLFW_PRESS;
+	returnInput.left		= glfwGetKey(window, GLFW_KEY_LEFT)		== GLFW_PRESS;
+	returnInput.right		= glfwGetKey(window, GLFW_KEY_RIGHT)	== GLFW_PRESS;
+	returnInput.commaKey	= glfwGetKey(window, GLFW_KEY_COMMA)	== GLFW_PRESS;
+	returnInput.dotKey		= glfwGetKey(window, GLFW_KEY_PERIOD)	== GLFW_PRESS;
 	return returnInput;
 };
 
