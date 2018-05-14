@@ -63,10 +63,10 @@ const unsigned int SCR_HEIGHT = 720;
 const float MAX_RENDER_DISTANCE = 10000.0f;
 const float MIN_RENDER_DISTANCE = 0.05f;
 
-const int LEVEL_MAX_HEIGHT = 100;
+const int LEVEL_MAX_HEIGHT = 200;
 const int MAX_WIDTH = 100;
 const int MAX_HEIGHT = 100;
-const int LEVELSCALE = 30*2;
+const int LEVELSCALE = 30*3;
 const float LERP_RANGE = 0.10f; // Currently using float lerpRange from main instead
 
 const int seasonTimeScaleInSeconds = 30;

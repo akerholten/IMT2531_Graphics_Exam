@@ -23,7 +23,7 @@
 ### Keybindings
 
 #### Camera
-- <kbd>-</kbd> To cycle between camera modes (Glider, First-Person Glider, Free-Roam, and Restricted-Cam)
+- <kbd>-</kbd> Cycles between camera modes (Glider, First-Person Glider, Free-Roam, and Restricted-Cam)
 - <kbd>I</kbd> Forward (Free-Roam) or Z movement (Restricted-Cam)
 - <kbd>K</kbd> Backwards (Free-Roam) or -Z movement (Restricted-Cam)
 - <kbd>J</kbd> Left (Free-Roam) or X movement (Restricted-Cam)
@@ -40,6 +40,8 @@
 - <kbd>D</kbd> Roll Right
 - <kbd>,</kbd> Increase speed
 - <kbd>.</kbd> Decrease speed
+- <kbd>R</kbd> Reset to original position
+- <kbd>F</kbd> Teleport to new random position
 
 #### Seasonal Change
 - <kbd>1</kbd> Toggles 'Winter'
@@ -47,6 +49,7 @@
 - <kbd>3</kbd> Toggles 'Summer'
 - <kbd>4</kbd> Toggles 'Autumn'
 - <kbd>5</kbd> Pauses seasonal change
+- <kbd>O</kbd> Toggles contour lines
 - <kbd>&uarr;</kbd> Increase lerp on zones
 - <kbd>&darr;</kbd> Decrease lerp on zones
 
