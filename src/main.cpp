@@ -49,6 +49,8 @@ float currentTimeLerp = 0.0f;
 bool resetPlanePosition = false;
 bool randomizePlanePosition = false;
 
+float lerpRange = 0.05f;
+
 int currentScreenHeight = SCR_HEIGHT;
 int currentScreenWidth	= SCR_WIDTH;
 
@@ -120,7 +122,7 @@ int main() {
 	/*-----------CURRENTLY DEBUGGING-----------*/
 
 
-	terrainModel terrain("assets/heightmap/height50.png");
+	terrainModel terrain("assets/heightmap/height100.png");
 	//terrain.scale(0.2f);
 	plane.getMidPoint(terrain.calculateMidPoint());
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
@@ -180,7 +182,7 @@ int main() {
 
 		if (camera.cameraState == FOLLOWPLANE) {
 			camera.followPlane(plane.getTransform());
-		}
+		} 
 		else if (camera.cameraState == PLANE_FIRSTPERSON) {
 			camera.firstPersonPlane(plane.getTransform());
 		}
@@ -222,6 +224,7 @@ int main() {
 		terrainShader.setFloat("seasonLerpPos", currentSeasonLerp);
 		terrainShader.setBool("contourLines", drawContour);
 		terrainShader.setFloat("MAX_HEIGHT", (float)LEVEL_MAX_HEIGHT);
+		terrainShader.setFloat("LERP_RANGE", lerpRange);
 		terrain.Draw(terrainShader);
 
 		glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
@@ -388,6 +391,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		randomizePlanePosition = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		if (lerpRange < 0.25f) {
+			lerpRange += 0.05f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		if (lerpRange >= 0.10f) {
+			lerpRange -= 0.05f;
+		}
 	}
 }
 

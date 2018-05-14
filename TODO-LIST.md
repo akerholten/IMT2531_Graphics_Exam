@@ -35,7 +35,11 @@
 
 ## 1 TODO:
 
+###### Have different lerp-ranges for different seasons
+- Description: Due to gaps between different materials being larger and smaller at different seasons.
+- Possible solution: For a better look on the terrain, different lerp-ranges for the different seasons would be better.
+
 ###### Display plane speed as UI/Text
 - Description: Display text on screen representing the speed the plane is going at
 - Possible solution: Retrieve speed from plane class and draw with FreeType
-- State:
+- State: *Done*

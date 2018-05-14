@@ -145,6 +145,34 @@ void Shader::feedSeasonsToShader() {
 	setFloat("season[3].grassLevel", 0.30f);
 	setFloat("season[3].brownLevel", 0.55f);
 	setFloat("season[3].snowLevel", 1.0f);
+
+	/*----	DEBUGGING NEW SEASONS	----
+
+	// Winter season
+	setFloat("season[0].waterLevel", 0.07f);
+	setFloat("season[0].grassLevel", 0.13f);
+	setFloat("season[0].brownLevel", 0.19f);
+	setFloat("season[0].snowLevel", 1.0f);
+
+	// Spring season
+	setFloat("season[1].waterLevel", 0.10f);
+	setFloat("season[1].grassLevel", 0.30f);
+	setFloat("season[1].brownLevel", 0.50f);
+	setFloat("season[1].snowLevel", 1.0f);
+
+	// Summer season
+	setFloat("season[2].waterLevel", 0.12f);
+	setFloat("season[2].grassLevel", 0.35f);
+	setFloat("season[2].brownLevel", 0.70f);
+	setFloat("season[2].snowLevel", 1.0f);
+
+	// Autumn season
+	setFloat("season[3].waterLevel", 0.12f);
+	setFloat("season[3].grassLevel", 0.30f);
+	setFloat("season[3].brownLevel", 0.55f);
+	setFloat("season[3].snowLevel", 1.0f);
+
+	----	DEBUGGING NEW SEASONS	----*/
 }
 
 void Shader::use()

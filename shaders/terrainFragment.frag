@@ -72,6 +72,7 @@ uniform int currentSeasonId;
 uniform float seasonLerpPos;
 uniform bool contourLines;
 uniform float MAX_HEIGHT;
+uniform float LERP_RANGE;
 //vec3 diffuseColor;
 //vec3 specularColor;
 
@@ -117,7 +118,7 @@ void main()
     }
 
     float vegetationModifier = pos.y/MAX_HEIGHT;
-    float lerpRange = 0.05f;
+    float lerpRange = LERP_RANGE;
 
     if(contourLines && withinContourRange(currentSeason, vegetationModifier)){
       FragColor = vec4(vec3(0.0f), 1.0f);

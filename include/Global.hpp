@@ -71,6 +71,7 @@ const int LEVEL_MAX_HEIGHT = 100;
 const int MAX_WIDTH = 100;
 const int MAX_HEIGHT = 100;
 const int LEVELSCALE = 30*2;
+const float LERP_RANGE = 0.10f;
 
 const int seasonTimeScaleInSeconds = 30;
 const int dayLightTimeScaleInSeconds = 10;

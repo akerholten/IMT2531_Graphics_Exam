@@ -17,3 +17,5 @@ https://learnopengl.com/Advanced-OpenGL/Cubemaps
 http://assimp.sourceforge.net/lib_html/materials.html
 
 https://stackoverflow.com/a/1121731
+
+https://learnopengl.com/Advanced-OpenGL/Blending
