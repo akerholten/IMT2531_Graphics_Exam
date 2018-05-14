@@ -4,6 +4,10 @@
 ### Author
 - [Nikolai Åkerholt](https://github.com/akerholten) (473184) - nikolaaa
 
+
+<img src="https://github.com/akerholten/IMT2531_Graphics_Exam/images/3rdperson.png" height="300" width="540">
+
+
 ### To build:
 - Clone repository
 - Run CMake
@@ -90,6 +94,10 @@
 - 'Up' and 'Down' arrows changes the interpolation value between zones
 
 
+### Images
+
+<img src="https://github.com/akerholten/IMT2531_Graphics_Exam/images/FirstPerson.png" height="300" width="540">
+<img src="https://github.com/akerholten/IMT2531_Graphics_Exam/images/FreeRoam.png" height="300" width="540">
 
 
 ### [To-Do List](TODO-LIST.md)
