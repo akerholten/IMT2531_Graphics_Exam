@@ -31,40 +31,44 @@ glm::mat4 Camera::GetViewMatrix()
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
+/*
+------ FOLLOW PLANE EXPLAINED ------
+I was trying to implement quaternion rotations to
+make sure the camera was rotating correctly and positioning correctly
+behind the plane. I had some issues, so for now the quaternion rotation
+applied to the plane are some-what correct. But for calculating where to
+place the camera I just take an average vector of the plane's last
+movement for the last 10 frames. This gives a pretty decent result, even
+though it is kind of an hack.
+
+To do it properly I wanted to try and calculate the plane's front and up,
+compared to world space. However, as there were som issues, this is how this
+function works as of now.
+waitForPos += 1;
+if (waitForPos = 10) {
+lastPlanePosition = planePosition;
+waitForPos = 0;
+}
+
+^ ISSUE IS NOW FIXED USING glm::conjugate(quat) on the quaternion retrieved
+*/
+
 void Camera::followPlane(glm::mat4 planeTransform) {
 	glm::mat4 targetTransform;
 	glm::quat rotation;
 	glm::vec3 planePosition;
+
+	// Decompose mat4 to get values from plane's transform
 	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
-	/*
-	------ FOLLOW PLANE EXPLAINED ------ 
-	I was trying to implement quaternion rotations to
-	make sure the camera was rotating correctly and positioning correctly 
-	behind the plane. I had some issues, so for now the quaternion rotation
-	applied to the plane are some-what correct. But for calculating where to
-	place the camera I just take an average vector of the plane's last
-	movement for the last 10 frames. This gives a pretty decent result, even
-	though it is kind of an hack.
-	
-	To do it properly I wanted to try and calculate the plane's front and up,
-	compared to world space. However, as there were som issues, this is how this 
-	function works as of now.
-	waitForPos += 1;
-	if (waitForPos = 10) {
-	lastPlanePosition = planePosition;
-	waitForPos = 0;
-	}
+	rotation = glm::conjugate(rotation);	// Conjugate to recieve a proper x,y,z unit transformation in plane's relative space
 
-	^ ISSUE IS NOW FIXED USING glm::conjugate(quat) on the quaternion retrieved
-	*/
-
-	rotation = glm::conjugate(rotation);
+	// Calculate the plane's relative up with it's rotation
 	glm::vec3 currentUp = glm::normalize(glm::cross(WorldUp, rotation));
 	glm::vec3 currentFront = glm::normalize(glm::cross(glm::vec3(-1.0f, 0.0f, 0.0f), rotation));
 	Front = currentFront;
+
+	// Set the new position and view with an offset to be behind and a bit "up" from the plane
 	Position = planePosition - (currentFront * 20.0f) + currentUp * 5.0f;
-	//Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	//Up = glm::normalize(glm::cross(Right, Front));
 	followPlaneView = glm::lookAt(Position, planePosition, currentUp);
 
 }
@@ -73,16 +77,19 @@ void Camera::firstPersonPlane(glm::mat4 planeTransform) {
 	glm::mat4 targetTransform;
 	glm::quat rotation;
 	glm::vec3 planePosition;
-	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
 
-	rotation = glm::conjugate(rotation);
+	// Decompose mat4 to get values from plane's transform
+	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
+	rotation = glm::conjugate(rotation);	// Conjugate to recieve a proper x,y,z unit transformation in plane's relative space
+
+	// Calculate the plane's relative up with it's rotation
 	glm::vec3 currentUp = glm::normalize(glm::cross(WorldUp, rotation));
 	glm::vec3 currentFront = glm::normalize(glm::cross(glm::vec3(-1.0f, 0.0f, 0.0f), rotation));
 	Front = currentFront;
+
+	// Set the new position and view with an offset to be in the cockpit
 	Position = planePosition + (currentFront * 2.2f) - currentUp * 0.1f;
-
 	glm::vec3 newLookAt = planePosition + (currentFront*4.0f) - (currentUp * 0.1f);
-
 	followPlaneView = glm::lookAt(Position, newLookAt, currentUp);
 }
 
@@ -119,7 +126,7 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 			Position -= yMove * velocity;
 	}
 	else if (cameraState == FOLLOWPLANE || cameraState == PLANE_FIRSTPERSON) {
-
+		// Do nothing, camera is following plane
 	}
 }
 
@@ -172,7 +179,7 @@ void Camera::updateCameraVectors()
 		Up = glm::normalize(glm::cross(Right, Front));
 	}
 	else {
-		Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+		Right = glm::normalize(glm::cross(Front, WorldUp)); 
 		Up = glm::normalize(glm::cross(Right, Front));
 	}
 	

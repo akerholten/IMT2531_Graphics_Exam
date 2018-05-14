@@ -10,10 +10,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 	std::ifstream vShaderFile;
 	std::ifstream fShaderFile;
 	std::ifstream gShaderFile;
+
 	// ensure ifstream objects can throw exceptions:
 	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
 	try
 	{
 		// open files
@@ -45,20 +47,24 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 	}
 	const char* vShaderCode = vertexCode.c_str();
 	const char * fShaderCode = fragmentCode.c_str();
+
 	// 2. compile shaders
 	unsigned int vertex, fragment;
 	int success;
 	char infoLog[512];
+
 	// vertex shader
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &vShaderCode, NULL);
 	glCompileShader(vertex);
 	checkCompileErrors(vertex, "VERTEX");
+
 	// fragment Shader
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
 	checkCompileErrors(fragment, "FRAGMENT");
+
 	// if geometry shader is given, compile geometry shader
 	unsigned int geometry;
 	if (geometryPath != nullptr)
@@ -69,6 +75,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 		glCompileShader(geometry);
 		checkCompileErrors(geometry, "GEOMETRY");
 	}
+
 	// shader Program
 	ID = glCreateProgram();
 	glAttachShader(ID, vertex);
@@ -77,6 +84,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 		glAttachShader(ID, geometry);
 	glLinkProgram(ID);
 	checkCompileErrors(ID, "PROGRAM");
+
 	// delete the shaders as they're linked into our program now and no longer necessery
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -85,6 +93,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 
 }
 
+/*----	This function is somewhat a "hack", bool is set for terrain which makes the shader 
+		feed it's materials ranging from water - grass - brown - snow				----*/
 void Shader::setOnlyMaterials(bool set) {
 	OnlyMaterials = set;
 }
@@ -93,6 +103,7 @@ bool Shader::isOnlyMaterials() {
 	return OnlyMaterials;
 }
 
+/*----	Feeds material data to terrain-shader	----*/
 void Shader::feedMaterialsToShader() {
 
 	// Water Material
@@ -121,6 +132,7 @@ void Shader::feedMaterialsToShader() {
 
 }
 
+/*----	Feeds season data to terrain-shader	----*/
 void Shader::feedSeasonsToShader() {
 	// Winter season
 	setFloat("season[0].waterLevel", 0.10f);
@@ -145,34 +157,6 @@ void Shader::feedSeasonsToShader() {
 	setFloat("season[3].grassLevel", 0.30f);
 	setFloat("season[3].brownLevel", 0.55f);
 	setFloat("season[3].snowLevel", 1.0f);
-
-	/*----	DEBUGGING NEW SEASONS	----
-
-	// Winter season
-	setFloat("season[0].waterLevel", 0.07f);
-	setFloat("season[0].grassLevel", 0.13f);
-	setFloat("season[0].brownLevel", 0.19f);
-	setFloat("season[0].snowLevel", 1.0f);
-
-	// Spring season
-	setFloat("season[1].waterLevel", 0.10f);
-	setFloat("season[1].grassLevel", 0.30f);
-	setFloat("season[1].brownLevel", 0.50f);
-	setFloat("season[1].snowLevel", 1.0f);
-
-	// Summer season
-	setFloat("season[2].waterLevel", 0.12f);
-	setFloat("season[2].grassLevel", 0.35f);
-	setFloat("season[2].brownLevel", 0.70f);
-	setFloat("season[2].snowLevel", 1.0f);
-
-	// Autumn season
-	setFloat("season[3].waterLevel", 0.12f);
-	setFloat("season[3].grassLevel", 0.30f);
-	setFloat("season[3].brownLevel", 0.55f);
-	setFloat("season[3].snowLevel", 1.0f);
-
-	----	DEBUGGING NEW SEASONS	----*/
 }
 
 void Shader::use()

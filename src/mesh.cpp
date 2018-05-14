@@ -6,11 +6,12 @@ Material::Material() {
 	diffuse = glm::vec3(0.0f);
 	specular = glm::vec3(0.0f);
 	shininess = 1;
+	opacity = 1.0f;
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Material material)
 {
-	// check model material if valid
+	// Check if model material if valid (shininess 0 caused some weird issues)
 	if (material.shininess == 0) {
 		material.shininess = 1.0f;
 	}

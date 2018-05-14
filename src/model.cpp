@@ -4,9 +4,6 @@
 #include "stb_image.h"
 
 
-/* PUBLIC FUNCTIONS */
-
-//unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 Model::Model(){
 	transform = glm::mat4(1.0f);

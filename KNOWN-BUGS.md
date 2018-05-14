@@ -24,6 +24,12 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 - Possible solution: Make sure to render transparent meshes last, and preferably the furthest away transparent meshes first
 - Cause: This is due to how rendering transparent objects are done, they have to be drawn last, and also the transparent objects furthest has to be drawn before those that are closer
 
+###### Not able to load highest resolution/pixel dense heightmap
+- Description: Loading heightmap "height100" and "height50" works, but "height20" and "height10" causes a crash.
+- Possible solution: Either convert the project to 64-bit, or possibly loading the heightmap data straight into the VBO/EBO.
+- Cause: This is due to the vectors not getting enough space allocated, and also as we are running and compiling on 32-bit, we
+are allocated less memory than on 64-bit.
+
 
 ## LEVEL 1:
 

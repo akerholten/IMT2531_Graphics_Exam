@@ -9,45 +9,57 @@
 #include "planeModel.hpp"
 
 
-// static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+/*--------	Main Functionality	--------*/
+
+/*------------	Callbacks	------------*/
 void error_callback(int error, const char* description);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+/*------------	Key Input	------------*/
 KeyInput getKeyInput(GLFWwindow *window);
 void updateWithInput(KeyInput keys, GLFWwindow *window);
+
+/*--------	Display Functions	--------*/
 std::string currentSeasonToString(int currentSeason, float seasonLerp);
-float lerp(float v0, float v1, float t);
 std::string currentTimeToString(int currentTime, float currentTimeLerp);
 
+/*--------	Lerp Function	----------*/
+float lerp(float v0, float v1, float t);
 
-// camera
+
+/*-- Camera --*/
 Camera camera(glm::vec3(0.0f, 10.0f, 30.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
+/*-- Text --*/
 TextController text;
 
-
-// timing
+/*-- Timing --*/
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 bool lightToggle = false;
 bool drawContour = false;
 
+/*-- Season Variables --*/
 bool lerpSeasons = true;
 float currentSeasonLerp = 0.0f;
 int currentSeason = 0;
 
+/*-- Time-of-Day Variables --*/
 bool lerpTime = true;
 int currentTime = 0;
 float currentTimeLerp = 0.0f;
+
 bool resetPlanePosition = false;
 bool randomizePlanePosition = false;
 
+// Lerp-Range used for terrain lerping
 float lerpRange = 0.05f;
 
 int currentScreenHeight = SCR_HEIGHT;
@@ -65,10 +77,10 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Uncomment this statement to fix compilation on OS X
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "framework", nullptr, nullptr); // glfwGetPrimaryMonitor()
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Graphics Exam", nullptr, nullptr); // glfwGetPrimaryMonitor()
 	if (!window)
 	{
 		// Window or OpenGL context creation failed
@@ -77,20 +89,18 @@ int main() {
 	}
 
 	glfwMakeContextCurrent(window);
-	// bind glfw events to custom functions
+	// Bind glfw events to custom functions
 	glfwSetErrorCallback(error_callback);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	// tell GLFW to capture our mouse
+	// Tell GLFW to capture our mouse
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	// configure global opengl state
-	// -----------------------------
+	// Configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-
 	glewExperimental = GL_TRUE;
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
@@ -103,8 +113,6 @@ int main() {
 		glfwTerminate();
 	}
 	
-
-
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);

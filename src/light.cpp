@@ -7,7 +7,10 @@ Light::Light() {
 }
 
 void Light::init() {
-	dirSet = true;
+	
+	dirSet = true; // Bool that is sent to shader to check if it is supposed to render directional light
+
+	/*--------	Initializing different daytime light variables	--------*/
 
 	nightLight.direction	= glm::vec3(0.0f, 0.20f, 1.0f);
 	nightLight.ambient		= glm::vec3(0.3f, 0.25f, 0.25f);
@@ -33,13 +36,15 @@ void Light::init() {
 }
 
 void Light::initSpotLight() {
+	// Maximum 10 spotlights
 	if (spotLightCount < 9) {
-
 		spotLights[spotLightCount].ambient = glm::vec3(0.2f, 0.2f, 0.2f);
 		spotLights[spotLightCount].diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 		spotLights[spotLightCount].specular = glm::vec3(0.6f, 0.6f, 0.6f);
+
 		spotLights[spotLightCount].cutOff = glm::cos(glm::radians(16.0f));
 		spotLights[spotLightCount].outerCutOff = glm::cos(glm::radians(20.0f));
+
 		spotLights[spotLightCount].constant = 1.0f;
 		spotLights[spotLightCount].linear = 0.007;
 		spotLights[spotLightCount].quadratic = 0.0002;
@@ -49,19 +54,10 @@ void Light::initSpotLight() {
 }
 
 void Light::lerpLight(int currentTime, float lerpPos) {
-	
-	if (currentTime == 0) {
-		worldLight = lerpCurrent(nightLight, morningLight, lerpPos);
-	}
-	else if (currentTime == 1) {
-		worldLight = lerpCurrent(morningLight, noonLight, lerpPos);
-	}
-	else if (currentTime == 2) {
-		worldLight = lerpCurrent(noonLight, middayLight, lerpPos);
-	}
-	else if (currentTime == 3) {
-		worldLight = lerpCurrent(middayLight, nightLight, lerpPos);
-	}
+	if		(currentTime == 0) worldLight = lerpCurrent(nightLight, morningLight, lerpPos);
+	else if (currentTime == 1) worldLight = lerpCurrent(morningLight, noonLight, lerpPos);
+	else if (currentTime == 2) worldLight = lerpCurrent(noonLight, middayLight, lerpPos);
+	else if (currentTime == 3) worldLight = lerpCurrent(middayLight, nightLight, lerpPos);
 }
 
 directionalLight Light::lerpCurrent(directionalLight start, directionalLight end, float lerpPos) {
@@ -71,23 +67,31 @@ directionalLight Light::lerpCurrent(directionalLight start, directionalLight end
 	resultLight.direction.y = lerp(start.direction.y, end.direction.y, lerpPos);
 	resultLight.direction.z = lerp(start.direction.z, end.direction.z, lerpPos);
 
-	resultLight.ambient.x = lerp(start.ambient.x, end.ambient.x, lerpPos);
-	resultLight.ambient.y = lerp(start.ambient.y, end.ambient.y, lerpPos);
-	resultLight.ambient.z = lerp(start.ambient.z, end.ambient.z, lerpPos);
+	resultLight.ambient.x	= lerp(start.ambient.x, end.ambient.x, lerpPos);
+	resultLight.ambient.y	= lerp(start.ambient.y, end.ambient.y, lerpPos);
+	resultLight.ambient.z	= lerp(start.ambient.z, end.ambient.z, lerpPos);
 
-	resultLight.diffuse.x = lerp(start.diffuse.x, end.diffuse.x, lerpPos);
-	resultLight.diffuse.y = lerp(start.diffuse.y, end.diffuse.y, lerpPos);
-	resultLight.diffuse.z = lerp(start.diffuse.z, end.diffuse.z, lerpPos);
+	resultLight.diffuse.x	= lerp(start.diffuse.x, end.diffuse.x, lerpPos);
+	resultLight.diffuse.y	= lerp(start.diffuse.y, end.diffuse.y, lerpPos);
+	resultLight.diffuse.z	= lerp(start.diffuse.z, end.diffuse.z, lerpPos);
 
-	resultLight.specular.x = lerp(start.specular.x, end.specular.x, lerpPos);
-	resultLight.specular.y = lerp(start.specular.y, end.specular.y, lerpPos);
-	resultLight.specular.z = lerp(start.specular.z, end.specular.z, lerpPos);
+	resultLight.specular.x	= lerp(start.specular.x, end.specular.x, lerpPos);
+	resultLight.specular.y	= lerp(start.specular.y, end.specular.y, lerpPos);
+	resultLight.specular.z	= lerp(start.specular.z, end.specular.z, lerpPos);
 
 	return resultLight;
 }
 
-void Light::newDirectionalLight(directionalLight light) {
+/*---------------------------------------
 
+Functions for initializing more light sources. 
+However, as I only went with one light source (directional light),
+I didn't need to use these functions. Instead initializing with init()
+
+---------------------------------------*/
+
+void Light::newDirectionalLight(directionalLight light) {
+	
 }
 
 void Light::newPointLight(pointLight light) {

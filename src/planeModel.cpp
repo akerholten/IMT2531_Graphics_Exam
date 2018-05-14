@@ -19,6 +19,7 @@ planeModel::planeModel(char *path) {
 	minSpeed = 2.5f;
 	currentSpeed = 2.5f;
 
+	std::srand(time(NULL));	// Rand seed for spawning plane in different positions
 	loadModel(path);
 }
 
@@ -48,12 +49,14 @@ void planeModel::update(float deltaTime, KeyInput keys) {
 
 void planeModel::setNewPosition() {
 	transform = glm::mat4(1.0f);
-	int maxX = MidPoint.x * 2;
-	int maxZ = MidPoint.z * 2;
+	int maxX = MidPoint.x * 2;		// Retrieve the max values from midpoint to
+	int maxZ = MidPoint.z * 2;		// ensure plane spawns within the terrain.
 	glm::vec3 newPos = glm::vec3((float)(rand() % maxX), 
-								(float)(LEVEL_MAX_HEIGHT * 0.90f), 
+								(float)(LEVEL_MAX_HEIGHT * 0.90f),
 								(float)(rand() % maxZ));
 	translate(newPos);
+
+	// Rotate positions to point up or down (on z) on the terrain, so the plane doesn't point outside
 	if (newPos.z < MidPoint.z) {
 		rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
