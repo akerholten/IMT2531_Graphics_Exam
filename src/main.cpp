@@ -1,6 +1,5 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-
 #include "camera.hpp"
 #include "objectModel.hpp"
 #include "terrainModel.hpp"
@@ -110,49 +109,42 @@ int main() {
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 
-
+	// Vsync on
 	glfwSwapInterval(1);
 
-	//Model model("assets/models/old\ man/muro.obj");
-
-	/*-----------CURRENTLY DEBUGGING-----------*/
-
+	/*----------- Initializing Models -----------*/
 	planeModel plane("assets/models/model/ask21mi.obj");
-
-	/*-----------CURRENTLY DEBUGGING-----------*/
-
-
 	terrainModel terrain("assets/heightmap/height100.png");
-	//terrain.scale(0.2f);
-	plane.getMidPoint(terrain.calculateMidPoint());
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
+	plane.getMidPoint(terrain.calculateMidPoint());
 
+	/*----------- Initializing Shaders -----------*/
 	Shader shader("shaders/modelVertex.vert", "shaders/modelFragment.frag");
 	Shader terrainShader("shaders/terrainVertex.vert", "shaders/terrainFragment.frag");
 	Shader skyboxShader("shaders/skyboxVertex.vert", "shaders/skyboxFragment.frag");
 	Shader textShader("shaders/freetypeVertex.vert", "shaders/freetypeFragment.frag");
 	terrainShader.setOnlyMaterials(true);
-	float lastFrame = 0;
 
 	Light light;
 	light.init();
 
+	// Initializing textController in main
 	text.init();
+
+	// For debugging lighting
 	//light.initSpotLight();
 
-	// draw in wireframe
+	// Draw in wireframe for debug
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
-																	// view/projection transformations
 	glm::mat4 projection =	glm::perspective(glm::radians(camera.Zoom), 
 							(float)currentScreenWidth/(float)currentScreenHeight, 
 							MIN_RENDER_DISTANCE, MAX_RENDER_DISTANCE);
 
-	//model.translate(glm::vec3(0.25f*504, 30.0f, 0.25f*1004));
-	//model.translate(glm::vec3(0.03f * 504, 30.0f, 0.50f * 1004));
 	plane.resetToOriginalPosition();
-	//plane.scale(2.0f);
+	float lastFrame = 0;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
@@ -162,7 +154,6 @@ int main() {
 		lastFrame = currentFrame;
 		if (lerpSeasons) {
 			currentSeasonLerp += (deltaTime / seasonTimeScaleInSeconds);
-
 			if (currentSeasonLerp >= 1.0f) {
 				currentSeasonLerp = 0.0f;
 				if (currentSeason < 3)		currentSeason++;
@@ -172,7 +163,6 @@ int main() {
 
 		if (lerpTime) {
 			currentTimeLerp += (deltaTime / dayLightTimeScaleInSeconds);
-
 			if (currentTimeLerp >= 1.0f) {
 				currentTimeLerp = 0.0f;
 				if (currentTime < 3)		currentTime++;
@@ -199,24 +189,18 @@ int main() {
 		light.lerpLight(currentTime, currentTimeLerp);
 		
 
-		// render
-		// ------
-
+		/*--------	Render --------*/
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 projection =	glm::perspective(glm::radians(camera.Zoom), 
 								(float)currentScreenWidth / (float)currentScreenHeight,
 								MIN_RENDER_DISTANCE, MAX_RENDER_DISTANCE);
-
 		glm::mat4 view = camera.GetViewMatrix();
 
-		//plane.rotate(25 * deltaTime, glm::vec3(0, 1, 0));
-		//plane.translate(glm::vec3(-15 * deltaTime, 0, 0));
-
+		/*--------	Terrain Draw --------*/
 		terrainShader.use();
 		light.sendLightToShader(terrainShader, camera);
-	
 		terrainShader.setVec3("viewPos", camera.Position);
 		terrainShader.setMat4("projection", projection);
 		terrainShader.setMat4("view", view);
@@ -227,12 +211,13 @@ int main() {
 		terrainShader.setFloat("LERP_RANGE", lerpRange);
 		terrain.Draw(terrainShader);
 
+
+		/*--------	Skybox Draw --------*/
 		glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		skybox.Draw(skyboxShader, skyboxView, projection);
 
-		
 
-
+		/*--------	Plane Draw --------*/
 		shader.use();
 		light.sendLightToShader(shader, camera);
 		shader.setMat4("projection", projection);
@@ -251,16 +236,12 @@ int main() {
 		float screenHeight = currentScreenHeight - currentScreenHeight / 15.0f;
 
 		std::string seasonAsText = currentSeasonToString(currentSeason, currentSeasonLerp);
-		text.RenderText(textShader, seasonAsText,
-		25.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-		text.RenderText(textShader, seasonAsText,
-		20.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
+		text.RenderText(textShader, seasonAsText, 25.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		text.RenderText(textShader, seasonAsText, 20.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 
 		std::string timeAsText = currentTimeToString(currentTime, currentTimeLerp);
-		text.RenderText(textShader, timeAsText,
-		currentScreenWidth - currentScreenWidth/10.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-		text.RenderText(textShader, timeAsText,
-		currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
+		text.RenderText(textShader, timeAsText, currentScreenWidth - currentScreenWidth/10.0f, screenHeight, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		text.RenderText(textShader, timeAsText, currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 		
 		if (camera.cameraState == FOLLOWPLANE || camera.cameraState == PLANE_FIRSTPERSON) {
 			text.RenderText(textShader, plane.currentSpeedAsText(),
@@ -270,8 +251,8 @@ int main() {
 
 		}
 
-		KeyInput keyInput;
 
+		KeyInput keyInput;
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -334,57 +315,56 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
 		drawContour = !drawContour;
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+	}
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 		lerpSeasons = !lerpSeasons;
+	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 3;
+		currentSeasonLerp	= 0.0f;
+		currentSeason		= 3;
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 2;
+		currentSeasonLerp	= 0.0f;
+		currentSeason		= 2;
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 1;
+		currentSeasonLerp	= 0.0f;
+		currentSeason		= 1;
 	}
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-		currentSeasonLerp = 0.0f;
-		currentSeason = 0;
+		currentSeasonLerp	= 0.0f;
+		currentSeason		= 0;
 	}
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
-		currentTimeLerp = 0.0f;
-		currentTime = 0;
+		currentTimeLerp		= 0.0f;
+		currentTime			= 0;
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-		currentTimeLerp = 0.0f;
-		currentTime = 1;
+		currentTimeLerp		= 0.0f;
+		currentTime			= 1;
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
-		currentTimeLerp = 0.0f;
-		currentTime = 2;
+		currentTimeLerp		= 0.0f;
+		currentTime			= 2;
 	}
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
-		currentTimeLerp = 0.0f;
-		currentTime = 3;
+		currentTimeLerp		= 0.0f;
+		currentTime			= 3;
 	}
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-		lerpTime = !lerpTime;
+		lerpTime			= !lerpTime;
 	}
 	if (glfwGetKey(window, GLFW_KEY_SLASH) == GLFW_PRESS) {
 		// Debug and realized GLFW_KEY_MINUS is + on european keyboard?
-		if(camera.cameraState == FOLLOWPLANE) 
-			camera.cameraState = PLANE_FIRSTPERSON;
-		else if(camera.cameraState == PLANE_FIRSTPERSON)
-			camera.cameraState = FREEROAM;
-		else if (camera.cameraState == FREEROAM)
-			camera.cameraState = RESTRICTEDCAM;
-		else if (camera.cameraState == RESTRICTEDCAM)
-			camera.cameraState = FOLLOWPLANE;
+		if		(camera.cameraState == FOLLOWPLANE)			camera.cameraState = PLANE_FIRSTPERSON;
+		else if (camera.cameraState == PLANE_FIRSTPERSON)	camera.cameraState = FREEROAM;
+		else if (camera.cameraState == FREEROAM)			camera.cameraState = RESTRICTEDCAM;
+		else if (camera.cameraState == RESTRICTEDCAM)		camera.cameraState = FOLLOWPLANE;
 	}
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 		resetPlanePosition = true;
