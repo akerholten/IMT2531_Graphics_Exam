@@ -1,7 +1,7 @@
 #include "textController.hpp"
 
 TextController::TextController() {
-
+	// Constructor currently not doing anything, using init() from main() instead
 }
 
 void TextController::init() {

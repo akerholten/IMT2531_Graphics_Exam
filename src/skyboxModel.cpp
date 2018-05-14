@@ -12,19 +12,18 @@ skyboxModel::skyboxModel(char *path, std::string filetype) {
 }
 
 void skyboxModel::Draw(Shader shader, glm::mat4 view, glm::mat4 projection) {
-	glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
+	glDepthFunc(GL_LEQUAL); // Change depth function so depth test passes when values are equal to depth buffer's content
 	shader.use();
-	//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
-	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	// skybox cube
+
+	// Skybox
 	glBindVertexArray(skyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
-	glDepthFunc(GL_LESS); // set depth function back to default
+	glDepthFunc(GL_LESS); // Set depth function back to default
 }
 
 void skyboxModel::loadModel(std::string path, std::string filetype) {
@@ -86,6 +85,7 @@ void skyboxModel::init() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLfloat*)0);
 }
 
+/*----	Hard-coded vertices for a box	----*/
 std::vector<GLfloat> skyboxModel::initVertices() {
 	std::vector<GLfloat> vertices {
 		// positions          

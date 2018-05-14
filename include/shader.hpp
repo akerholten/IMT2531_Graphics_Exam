@@ -15,7 +15,7 @@ public:
 	// the program ID
 	unsigned int ID;
 
-	// Settings for "hacking in materials"
+	// Settings for "hacking in materials and seasons"
 	void setOnlyMaterials(bool set);
 	bool isOnlyMaterials();
 	void feedMaterialsToShader();

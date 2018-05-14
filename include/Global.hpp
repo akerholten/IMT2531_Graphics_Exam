@@ -3,8 +3,6 @@
 
 #include <string>
 
-
-
 struct Vertex {
 
 	glm::vec3 Position;
@@ -12,7 +10,6 @@ struct Vertex {
 	glm::vec2 TexCoords;
 
 };
-
 
 struct Texture {
 	unsigned int id;
@@ -60,7 +57,6 @@ struct KeyInput {
 	bool escKey;
 };
 
-
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
@@ -71,7 +67,7 @@ const int LEVEL_MAX_HEIGHT = 100;
 const int MAX_WIDTH = 100;
 const int MAX_HEIGHT = 100;
 const int LEVELSCALE = 30*2;
-const float LERP_RANGE = 0.10f;
+const float LERP_RANGE = 0.10f; // Currently using float lerpRange from main instead
 
 const int seasonTimeScaleInSeconds = 30;
 const int dayLightTimeScaleInSeconds = 10;

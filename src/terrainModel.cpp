@@ -3,7 +3,6 @@
 #include <iostream>
 
 terrainModel::terrainModel() {
-	// do nothing
 	terrainMaxHeight = LEVEL_MAX_HEIGHT;
 	blockScale = float(LEVEL_MAX_HEIGHT / LEVELSCALE);
 }
@@ -16,7 +15,7 @@ terrainModel::terrainModel(char* path) {
 
 glm::vec3 terrainModel::calculateMidPoint() {
 	// To calculate proper midpoint
-	// Halfway down in Y * Pixels in each row + one row/2
+	// Halfway down in Y multiplied with X-Pixels in each row + one row/2
 	return vertices[(imageHeight / 2) * imageWidth + (imageWidth / 2)].Position;
 }
 
@@ -25,7 +24,6 @@ void terrainModel::loadModel(std::string path) {
 }
 
 unsigned int terrainModel::HeightmapFromFile(const char *path, bool gamma) {
-	
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -55,6 +53,7 @@ unsigned int terrainModel::HeightmapFromFile(const char *path, bool gamma) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		// Call to generate terrain before image data is freed
 		generateTerrain(data, nrComponents);
 		stbi_image_free(data);
 	}
@@ -68,44 +67,36 @@ unsigned int terrainModel::HeightmapFromFile(const char *path, bool gamma) {
 }
 
 void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
-	std::cout	<< imageWidth	<< " ImageWidth\n"
-				<< imageHeight	<< " ImageHeight\n";
-	for (int y = 0; y < imageHeight; y++) {
-		for (int x = 0; x < imageWidth; x++) {
+	for (int y = 0; y < imageHeight; y++) {		// Iterating on Y last
+		for (int x = 0; x < imageWidth; x++) {	// So we calculate each row of data first
 			heightMap.push_back(getPixelHeight(data, nrComponents, x, y));
-			// Size of the terrain in world units
-			float terrainWidth = (imageWidth - 1) * blockScale;		// X-axis
-			float terrainHeight = (imageHeight - 1) * blockScale;	// Z-axis
-
-			float halfTerrainWidth = terrainWidth * 0.5f;
-			float halfTerrainHeight = terrainHeight * 0.5f;
 			
 			Vertex vboData;
 			vboData.Position.x	= x * blockScale;
-			vboData.Position.y	= heightMap[x + (imageWidth * y)] * terrainMaxHeight;
+			vboData.Position.y	= heightMap[x + (imageWidth * y)] * terrainMaxHeight;	// Using correct calculated height
 			vboData.Position.z	= y * blockScale;
 			vboData.Normal		= glm::vec3(0.0f);
 			vboData.TexCoords	= glm::vec2(0.0f);
 
 			vertices.push_back(vboData);
-			
-			
-			/*if (heightMap[x + (imageWidth * y)] >= 0.95f || heightMap[x + (imageWidth * y)] <= 0.05f) {
-				std::cout << heightMap[x + (imageWidth * y)] << " Height "
-					<< x << " x " << y << " y \n";
-			}*/
 		}
 	}
 
+	// Generate indices
 	generateIndexBuffer();
+
+	// Generate normals, 6 times, as each vertex is connected to 6 other vertices
+	// This is to ensure that they get somewhat correct normal-data
 	for (int i = 0; i < 6; i++) {
 		generateNormals(i);
 	}
 
+	// Then normalize the calculated normals on faces
 	for (int i = 0; i < indices.size(); i++) {
 		vertices[indices[i]].Normal = glm::normalize(vertices[indices[i]].Normal);
 	}
 
+	// Then normalize the calculated normals on vertices
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].Normal = glm::normalize(vertices[i].Normal);
 	}
@@ -123,17 +114,8 @@ void terrainModel::generateTerrain(unsigned char* data, int nrComponents) {
 }
 
 void terrainModel::generateIndexBuffer() {
-	/*
-	Reducing numTriangles with one in width and height
-	as I am calculating the triangles from top to bottom
-	*/
-	
 	// 2 triangles for each quad
-	int numTriangles = (imageWidth - 1) * (imageHeight - 1) * 2;
-
 	// 3 indices for each triangle
-	//indices.resize(numTriangles * 3);
-
 	int index = 0;
 	for (int y = 0; y < imageHeight - 1; y++) {
 		for (int x = 0; x < imageWidth - 1; x++) {
@@ -143,18 +125,10 @@ void terrainModel::generateIndexBuffer() {
 			indices.push_back(vertexIndex + imageWidth);
 			indices.push_back(vertexIndex + 1);
 
+			// Bottom triangle
 			indices.push_back(vertexIndex + 1);
 			indices.push_back(vertexIndex + imageWidth + 1);
 			indices.push_back(vertexIndex + imageWidth);
-			/*
-			indices[index++] = vertexIndex;
-			indices[index++] = vertexIndex + imageWidth;
-			indices[index++] = vertexIndex + 1;
-			// Bottom triangle
-			indices[index++] = vertexIndex + 1;
-			indices[index++] = vertexIndex + imageWidth + 1;
-			indices[index++] = vertexIndex + imageWidth;
-		*/
 		}
 	}
 }
@@ -165,20 +139,12 @@ void terrainModel::generateNormals(int offset) {
 		glm::vec3 v1 = vertices[indices[i+1]].Position;
 		glm::vec3 v2 = vertices[indices[i+2]].Position;
 
-		glm::vec3 normal = glm::cross(v2 - v0, v1 - v0); //(v2 - v0, v1 - v0) (v1 - v0, v2 - v0)
+		glm::vec3 normal = glm::cross(v2 - v0, v1 - v0);
 
 		vertices[indices[i+0]].Normal += normal;
 		vertices[indices[i+1]].Normal += normal;
 		vertices[indices[i+2]].Normal += normal;
 	}
-	/*
-	for (int i = 0; i < indices.size(); i++) {
-		vertices[indices[i]].Normal = glm::normalize(vertices[indices[i]].Normal);
-	}
-
-	for (int i = 0; i < vertices.size(); i++) {
-		vertices[i].Normal = glm::normalize(vertices[i].Normal);
-	}*/
 }
 
 float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x, int y) {
@@ -193,5 +159,5 @@ float terrainModel::getPixelHeight(unsigned char* data, int nrComponents, int x,
 	if		(nrComponents == 1)	height = (float)r + (float)g;
 	else if (nrComponents == 2)	height = (float)r + (float)g;	//Put values together to calculate the height
 	else if (nrComponents > 2)	height = (float)r + (float)g + (float)b;
-	return (height / 255); //* terrainMaxHeight; //Return the height with smooth in 40
+	return (height / 255);  // Divided by 255 to give a value between 0 and 1
 }
