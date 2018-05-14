@@ -122,7 +122,7 @@ int main() {
 
 	/*----------- Initializing Models -----------*/
 	planeModel plane("assets/models/model/ask21mi.obj");
-	terrainModel terrain("assets/heightmap/height100.png");
+	terrainModel terrain("assets/heightmap/height50.png");
 	skyboxModel skybox("assets/skybox/skybox", ".jpg");
 	plane.getMidPoint(terrain.calculateMidPoint());
 
