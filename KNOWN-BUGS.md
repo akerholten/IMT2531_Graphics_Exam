@@ -19,6 +19,10 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 
 ## LEVEL 2:
 
+###### Rendering transparent meshes, looks through incorrect
+- Description: Rendering transparent meshes makes you look through other meshes that are drawn
+- Possible solution: Make sure to render transparent meshes last, and preferably the furthest away transparent meshes first
+- Cause: This is due to how rendering transparent objects are done, they have to be drawn last, and also the transparent objects furthest has to be drawn before those that are closer
 
 
 ## LEVEL 1:
@@ -42,3 +46,8 @@ level 3: Program breaking in nature. Will probably have the same origin as a lev
 - Description: When going from flight-mode to free-roam camera, the camera "flips" over to the last cam pos before flight-mode started
 - Possible solution: Calculate new yaw/pitch values, and apply them to the camera after flightmode.
 - Cause: Guess: When leaving flight-mode, the camera calulates it's rotation with "yaw" and "pitch" values that have not been calculated while flying
+
+###### Dashboard not rendering totally correct in first person
+- Description: It seems like some textures have some opacity or are supposed to be drawn with glass on top maybe, so they do not render correctly in the first-person mode
+- Possible solution: Change proper render distance, position, or handle which meshes to draw in which order more correct
+- Cause: Guess: They have glass above them, that makes the opacity draw a bit weird at times?
