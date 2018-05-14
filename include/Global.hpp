@@ -65,7 +65,7 @@ const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
 const float MAX_RENDER_DISTANCE = 10000.0f;
-const float MIN_RENDER_DISTANCE = 0.1f;
+const float MIN_RENDER_DISTANCE = 0.05f;
 
 const int LEVEL_MAX_HEIGHT = 100;
 const int MAX_WIDTH = 100;

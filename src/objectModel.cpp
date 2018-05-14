@@ -118,14 +118,17 @@ Mesh objectModel::processMesh(aiMesh *mesh, const aiScene *scene)
 	aiColor3D diffuse;
 	aiColor3D specular;
 	float getShininess;
+	float getOpacity;
 	material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
 	material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
 	material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
 	material->Get(AI_MATKEY_SHININESS, getShininess);
-	meshMaterial.ambient = glm::vec3(ambient.r, ambient.g, ambient.b);
-	meshMaterial.diffuse = glm::vec3(diffuse.r, diffuse.g, diffuse.b);
-	meshMaterial.specular = glm::vec3(specular.r, specular.g, specular.b);
-	meshMaterial.shininess = getShininess;
+	material->Get(AI_MATKEY_OPACITY, getOpacity);
+	meshMaterial.ambient	= glm::vec3(ambient.r, ambient.g, ambient.b);
+	meshMaterial.diffuse	= glm::vec3(diffuse.r, diffuse.g, diffuse.b);
+	meshMaterial.specular	= glm::vec3(specular.r, specular.g, specular.b);
+	meshMaterial.shininess	= getShininess;
+	meshMaterial.opacity	= getOpacity;
 	// return a mesh object created from the extracted mesh data
 	return Mesh(vertices, indices, textures, meshMaterial);
 }

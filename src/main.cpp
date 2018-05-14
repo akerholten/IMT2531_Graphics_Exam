@@ -181,6 +181,9 @@ int main() {
 		if (camera.cameraState == FOLLOWPLANE) {
 			camera.followPlane(plane.getTransform());
 		}
+		else if (camera.cameraState == PLANE_FIRSTPERSON) {
+			camera.firstPersonPlane(plane.getTransform());
+		}
 
 		if (resetPlanePosition) {
 			plane.resetToOriginalPosition();
@@ -205,14 +208,7 @@ int main() {
 								MIN_RENDER_DISTANCE, MAX_RENDER_DISTANCE);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		shader.use();
-		light.sendLightToShader(shader, camera);
 
-		shader.setMat4("projection", projection);
-		shader.setMat4("view", view);
-
-
-		plane.Draw(shader);
 		//plane.rotate(25 * deltaTime, glm::vec3(0, 1, 0));
 		//plane.translate(glm::vec3(-15 * deltaTime, 0, 0));
 
@@ -228,10 +224,18 @@ int main() {
 		terrainShader.setFloat("MAX_HEIGHT", (float)LEVEL_MAX_HEIGHT);
 		terrain.Draw(terrainShader);
 
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-		skybox.Draw(skyboxShader, view, projection);
+		glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+		skybox.Draw(skyboxShader, skyboxView, projection);
 
 		
+
+
+		shader.use();
+		light.sendLightToShader(shader, camera);
+		shader.setMat4("projection", projection);
+		shader.setMat4("view", view);
+		plane.Draw(shader);
+
 		/*
 		------- Render Text -------
 		(Shader, textToDisplay, startX, startY, scale, vec3 color)
@@ -240,6 +244,7 @@ int main() {
 		can get from here. Hope the argument comment above can show a bit easier
 		what is sent to it.
 		*/
+
 		float screenHeight = currentScreenHeight - currentScreenHeight / 15.0f;
 
 		std::string seasonAsText = currentSeasonToString(currentSeason, currentSeasonLerp);
@@ -254,7 +259,7 @@ int main() {
 		text.RenderText(textShader, timeAsText,
 		currentScreenWidth - currentScreenWidth / 10.0f - 5.0f, screenHeight, 1.05f, glm::vec3(0.1f, 0.1f, 0.1f));
 		
-		if (camera.cameraState == FOLLOWPLANE) {
+		if (camera.cameraState == FOLLOWPLANE || camera.cameraState == PLANE_FIRSTPERSON) {
 			text.RenderText(textShader, plane.currentSpeedAsText(),
 				currentScreenWidth - currentScreenWidth / 6.0f, screenHeight/10.0f, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 			text.RenderText(textShader, plane.currentSpeedAsText(),
@@ -370,10 +375,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (glfwGetKey(window, GLFW_KEY_SLASH) == GLFW_PRESS) {
 		// Debug and realized GLFW_KEY_MINUS is + on european keyboard?
 		if(camera.cameraState == FOLLOWPLANE) 
+			camera.cameraState = PLANE_FIRSTPERSON;
+		else if(camera.cameraState == PLANE_FIRSTPERSON)
 			camera.cameraState = FREEROAM;
-		else if(camera.cameraState == FREEROAM) 
+		else if (camera.cameraState == FREEROAM)
 			camera.cameraState = RESTRICTEDCAM;
-		else if (camera.cameraState == RESTRICTEDCAM) 
+		else if (camera.cameraState == RESTRICTEDCAM)
 			camera.cameraState = FOLLOWPLANE;
 	}
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {

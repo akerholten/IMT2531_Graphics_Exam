@@ -6,6 +6,7 @@ struct Material {
   vec3 diffuse;
   vec3 specular;
   float shininess;
+  float opacity;
 };
 uniform Material material;
 
@@ -117,7 +118,7 @@ void main()
       result += CalcSpotLight(spotLight[i], norm, FragPos, viewDir);
     }
 
-    FragColor = vec4(result, 1.0f);
+    FragColor = vec4(result, material.opacity);
 }
 // calculates the color when using a directional light.
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

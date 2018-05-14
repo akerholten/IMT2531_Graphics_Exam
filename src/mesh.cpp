@@ -102,6 +102,7 @@ void Mesh::Draw(Shader shader)
 		shader.setVec3("material.diffuse", material.diffuse);
 		shader.setVec3("material.specular", material.specular);
 		shader.setFloat("material.shininess", material.shininess);
+		shader.setFloat("material.opacity", material.opacity);
 	}
 	
 

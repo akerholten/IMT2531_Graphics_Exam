@@ -27,7 +27,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
 glm::mat4 Camera::GetViewMatrix()
 {
-	if (cameraState == FOLLOWPLANE) return followPlaneView;
+	if (cameraState == FOLLOWPLANE || cameraState == PLANE_FIRSTPERSON) return followPlaneView;
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
@@ -54,6 +54,8 @@ void Camera::followPlane(glm::mat4 planeTransform) {
 	lastPlanePosition = planePosition;
 	waitForPos = 0;
 	}
+
+	^ ISSUE IS NOW FIXED USING glm::conjugate(quat) on the quaternion retrieved
 	*/
 
 	rotation = glm::conjugate(rotation);
@@ -65,6 +67,23 @@ void Camera::followPlane(glm::mat4 planeTransform) {
 	//Up = glm::normalize(glm::cross(Right, Front));
 	followPlaneView = glm::lookAt(Position, planePosition, currentUp);
 
+}
+
+void Camera::firstPersonPlane(glm::mat4 planeTransform) {
+	glm::mat4 targetTransform;
+	glm::quat rotation;
+	glm::vec3 planePosition;
+	glm::decompose(planeTransform, glm::vec3(), rotation, planePosition, glm::vec3(), glm::vec4());
+
+	rotation = glm::conjugate(rotation);
+	glm::vec3 currentUp = glm::normalize(glm::cross(WorldUp, rotation));
+	glm::vec3 currentFront = glm::normalize(glm::cross(glm::vec3(-1.0f, 0.0f, 0.0f), rotation));
+	Front = currentFront;
+	Position = planePosition + (currentFront * 2.2f) - currentUp * 0.1f;
+
+	glm::vec3 newLookAt = planePosition + (currentFront*4.0f) - (currentUp * 0.1f);
+
+	followPlaneView = glm::lookAt(Position, newLookAt, currentUp);
 }
 
 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -99,7 +118,7 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 		if (direction == DOWN)
 			Position -= yMove * velocity;
 	}
-	else if (cameraState == FOLLOWPLANE) {
+	else if (cameraState == FOLLOWPLANE || cameraState == PLANE_FIRSTPERSON) {
 
 	}
 }
@@ -141,7 +160,7 @@ void Camera::ProcessMouseScroll(float yoffset)
 // Calculates the front vector from the Camera's (updated) Euler Angles
 void Camera::updateCameraVectors()
 {
-	if (cameraState != FOLLOWPLANE) {
+	if (cameraState != FOLLOWPLANE && cameraState != PLANE_FIRSTPERSON) {
 		// Calculate the new Front vector
 		glm::vec3 front;
 		front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
